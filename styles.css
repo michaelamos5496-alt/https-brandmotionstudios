@@ -13,12 +13,15 @@
 
 html,
 body {
+  width: 100%;
+  min-height: 100%;
   margin: 0;
   padding: 0;
   background: var(--bg);
   color: var(--text);
   font-family: "Montserrat", sans-serif;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 a {
@@ -97,7 +100,7 @@ main {
 }
 
 .hero {
-  min-height: calc(100vh - 80px);
+  min-height: 100svh;
   display: grid;
   grid-template-columns: 1fr;
   gap: 0;
@@ -211,7 +214,7 @@ main {
 }
 
 .featured {
-  min-height: calc(100vh - 80px);
+  min-height: 100svh;
   padding: 0;
   border-bottom: 1px solid var(--line);
 }
@@ -221,7 +224,7 @@ main {
   border: 0;
   background: #090909;
   overflow: hidden;
-  min-height: calc(100vh - 80px);
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -269,7 +272,7 @@ main {
 .featured-media iframe,
 .featured-media video {
   position: relative;
-  width: min(100%, calc((100vh - 80px) * 16 / 9));
+  width: min(100%, calc(100svh * 16 / 9));
   height: min(100%, calc(100vw * 9 / 16));
   aspect-ratio: 16 / 9;
   max-width: 100%;
