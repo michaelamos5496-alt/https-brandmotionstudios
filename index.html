@@ -485,11 +485,15 @@
           </label>
           <label>
             Country
-            <input type="text" name="country" placeholder="Country" required />
+            <select id="countrySelect" name="country" required>
+              <option value="">Select country</option>
+            </select>
           </label>
           <label>
             Project Location
-            <input type="text" name="project_location" placeholder="City / Region" required />
+            <select id="projectLocationSelect" name="project_location" required disabled>
+              <option value="">Select country first</option>
+            </select>
           </label>
           <label class="full">
             Project Brief
