@@ -206,7 +206,7 @@ function openProject06Popup(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  openPlayer('assets/videos/p6.mp4');
+  openPlayer('https://player.vimeo.com/video/1118476418?autoplay=1&title=0&byline=0&portrait=0');
   requestPlayerFullscreen();
 }
 
