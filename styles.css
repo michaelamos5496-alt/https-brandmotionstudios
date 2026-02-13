@@ -32,6 +32,26 @@ body.player-open {
   overflow: hidden;
 }
 
+.topbar,
+main,
+.footer {
+  width: 100vw !important;
+  max-width: none !important;
+}
+
+.hero,
+.featured,
+.portfolio,
+.bts,
+.services,
+.process,
+.about,
+.inquiry,
+.contact {
+  width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+}
+
 .topbar {
   position: sticky;
   top: 0;
