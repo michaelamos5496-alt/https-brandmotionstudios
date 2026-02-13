@@ -12,6 +12,8 @@ const playerOverlay = document.getElementById('playerOverlay');
 const playerFrame = document.getElementById('playerFrame');
 const playerVideo = document.getElementById('playerVideo');
 const playerCloseBtn = document.getElementById('playerCloseBtn');
+const inquiryForm = document.querySelector('form.inquiry-form');
+const whatsappLink = document.querySelector('a[href^="https://wa.me/"]');
 const countrySelect = document.getElementById('countrySelect');
 const projectLocationSelect = document.getElementById('projectLocationSelect');
 const phoneInput = document.getElementById('phoneInput');
@@ -24,6 +26,21 @@ const portfolioCards = Array.from(document.querySelectorAll('.work-item'));
 const cardsPerPage = 3;
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 let currentPage = 0;
+
+function trackEvent(name, params = {}) {
+  if (!name) return;
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', name, params);
+  }
+  if (typeof window.va === 'function') {
+    try {
+      window.va('event', { name, data: params });
+    } catch {}
+  }
+  if (Array.isArray(window.dataLayer)) {
+    window.dataLayer.push({ event: name, ...params });
+  }
+}
 
 const countries = [
   "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina",
@@ -467,6 +484,7 @@ function openProject06Popup(event) {
 }
 
 function openProjectById(projectId, event) {
+  trackEvent('play_video_click', { project_id: projectId || 'unknown' });
   if (projectId === '01') return openProject01Popup(event);
   if (projectId === '02') return openProject02Popup(event);
   if (projectId === '03') return openProject03Popup(event);
@@ -571,6 +589,18 @@ document.addEventListener('click', (event) => {
 
 if (playerCloseBtn) {
   playerCloseBtn.addEventListener('click', closePlayer);
+}
+
+if (whatsappLink) {
+  whatsappLink.addEventListener('click', () => {
+    trackEvent('whatsapp_click', { location: 'contact_section' });
+  });
+}
+
+if (inquiryForm) {
+  inquiryForm.addEventListener('submit', () => {
+    trackEvent('inquiry_submit', { form: 'project-inquiry' });
+  });
 }
 
 if (playerOverlay) {
