@@ -81,6 +81,13 @@ function resumeLocalPreviews() {
 
 function applyWorkParallax() {
   if (prefersReducedMotion.matches) return;
+  if (window.innerWidth <= 1024) {
+    workItems.forEach((item) => {
+      item.style.setProperty('--media-shift', '0px');
+      item.style.setProperty('--meta-shift', '0px');
+    });
+    return;
+  }
   const viewportMid = window.innerHeight / 2;
   workItems.forEach((item) => {
     if (item.classList.contains('page-hidden')) {
