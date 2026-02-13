@@ -197,7 +197,7 @@ function openProject05Popup(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  openPlayer('assets/videos/p5.mp4');
+  openPlayer('https://player.vimeo.com/video/1091937617?autoplay=1&title=0&byline=0&portrait=0');
   requestPlayerFullscreen();
 }
 
