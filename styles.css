@@ -831,6 +831,140 @@ main {
   font-size: 0.72rem;
 }
 
+.bts,
+.services,
+.process,
+.inquiry {
+  padding: clamp(2.2rem, 6vw, 5rem) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.bts-head h2,
+.services-head h2,
+.process h2,
+.inquiry-head h2 {
+  margin: 0 0 0.7rem;
+  font-size: clamp(1.5rem, 4.8vw, 3.4rem);
+  line-height: 1.03;
+  text-transform: uppercase;
+}
+
+.bts-head p,
+.services-head p,
+.process p,
+.inquiry-head p {
+  color: #cecece;
+}
+
+.bts-strip {
+  margin-top: 1.1rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #0d0d0d;
+}
+
+.bts-track {
+  display: flex;
+  gap: 0.65rem;
+  width: max-content;
+  padding: 0.65rem;
+  animation: btsScroll 34s linear infinite;
+}
+
+.bts-slide {
+  margin: 0;
+  width: clamp(220px, 34vw, 460px);
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid #2c2c2c;
+  background: #0a0a0a;
+}
+
+.bts-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.bts-strip:hover .bts-track {
+  animation-play-state: paused;
+}
+
+.services-grid,
+.process-grid {
+  margin-top: 1.15rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.service-card,
+.process-step {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 1rem;
+}
+
+.service-card h3,
+.process-step h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.service-card p,
+.process-step p {
+  margin: 0;
+  color: #cdcdcd;
+  line-height: 1.6;
+}
+
+.process-index {
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  margin-bottom: 0.6rem;
+}
+
+.inquiry-form {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.inquiry-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.inquiry-form input,
+.inquiry-form select,
+.inquiry-form textarea {
+  width: 100%;
+  border: 1px solid #353535;
+  background: #111;
+  color: var(--text);
+  padding: 0.7rem 0.75rem;
+  font: inherit;
+}
+
+.inquiry-form textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+
+.inquiry-form .full {
+  grid-column: 1 / -1;
+}
+
 .about {
   padding: clamp(3rem, 8vw, 7rem) 0;
   display: grid;
@@ -998,6 +1132,15 @@ main {
   }
 }
 
+@keyframes btsScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero::before {
     animation: none;
@@ -1040,6 +1183,10 @@ main {
     clip-path: none;
     opacity: 1;
     transform: none;
+  }
+
+  .bts-track {
+    animation: none;
   }
 }
 
@@ -1090,6 +1237,19 @@ main {
     font-size: 0.92rem;
     line-height: 1.55;
     max-width: 54ch;
+  }
+
+  .bts-slide {
+    width: clamp(200px, 58vw, 380px);
+  }
+
+  .services-grid,
+  .process-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inquiry-form {
+    grid-template-columns: 1fr;
   }
 
   .work-item {
@@ -1182,6 +1342,24 @@ main {
 
   .featured-overlay p {
     font-size: 0.82rem;
+  }
+
+  .bts,
+  .services,
+  .process,
+  .inquiry {
+    padding: 1.8rem 0;
+  }
+
+  .bts-head h2,
+  .services-head h2,
+  .process h2,
+  .inquiry-head h2 {
+    font-size: clamp(1.2rem, 9vw, 2rem);
+  }
+
+  .bts-slide {
+    width: 72vw;
   }
 
   .work-item {
