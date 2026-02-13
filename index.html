@@ -462,8 +462,16 @@
           <p class="kicker">Start A Project</p>
           <h2>Tell us what you need, we will respond with next steps.</h2>
         </div>
-        <form class="inquiry-form" name="project-inquiry" method="POST" data-netlify="true">
+        <form
+          class="inquiry-form"
+          name="project-inquiry"
+          method="POST"
+          action="/thank-you.html"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+        >
           <input type="hidden" name="form-name" value="project-inquiry" />
+          <input type="hidden" name="bot-field" />
           <label>
             Full Name
             <input type="text" name="name" required />
