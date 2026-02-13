@@ -1524,3 +1524,32 @@ main {
     gap: 0.55rem;
   }
 }
+
+/* Fixed 1920x1080 page canvas */
+html,
+body {
+  min-width: 1920px;
+}
+
+body > .topbar,
+body > main,
+body > .footer {
+  width: 1920px !important;
+  max-width: 1920px !important;
+  margin-left: calc(50% - 960px) !important;
+  margin-right: 0 !important;
+}
+
+main > section,
+main > .portfolio {
+  width: 1920px !important;
+  max-width: 1920px !important;
+  margin-left: calc(50% - 960px) !important;
+  margin-right: 0 !important;
+}
+
+.hero,
+.featured,
+.work-item {
+  min-height: 1080px !important;
+}
