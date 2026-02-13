@@ -481,6 +481,10 @@
             <input type="email" name="email" required />
           </label>
           <label>
+            Phone Number
+            <input type="tel" name="phone_number" placeholder="+233..." required />
+          </label>
+          <label>
             Project Type
             <select name="project_type" required>
               <option value="">Select project type</option>
@@ -502,6 +506,10 @@
             <select id="projectLocationSelect" name="project_location" required disabled>
               <option value="">Select country first</option>
             </select>
+          </label>
+          <label>
+            Preferred Shoot Date
+            <input type="date" name="preferred_shoot_date" required />
           </label>
           <label class="full">
             Project Brief
@@ -553,9 +561,11 @@
       <input type="text" name="bot-field" />
       <input type="text" name="name" />
       <input type="email" name="email" />
+      <input type="text" name="phone_number" />
       <input type="text" name="project_type" />
       <input type="text" name="country" />
       <input type="text" name="project_location" />
+      <input type="text" name="preferred_shoot_date" />
       <textarea name="brief"></textarea>
     </form>
 
