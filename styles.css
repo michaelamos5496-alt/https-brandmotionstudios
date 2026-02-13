@@ -868,7 +868,7 @@ main {
   gap: 0.65rem;
   width: max-content;
   padding: 0.65rem;
-  animation: btsScroll 34s linear infinite;
+  animation: btsScroll 42.5s linear infinite;
 }
 
 .bts-slide {
