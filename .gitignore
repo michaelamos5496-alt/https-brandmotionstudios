@@ -1,0 +1,6 @@
+.DS_Store
+node_modules/
+.netlify/
+assets/videos/*.mp4
+assets/videos/*.MP4
+borgatec-website/
