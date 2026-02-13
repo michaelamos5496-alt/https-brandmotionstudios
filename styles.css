@@ -98,9 +98,10 @@ main {
 .hero {
   min-height: calc(100vh - 80px);
   display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  gap: 2rem;
-  align-items: end;
+  grid-template-columns: 1fr;
+  gap: 0;
+  align-items: center;
+  justify-items: center;
   padding: clamp(2rem, 6vw, 5rem) 0 clamp(2rem, 8vw, 7rem);
   border-bottom: 1px solid var(--line);
   position: relative;
@@ -131,7 +132,7 @@ main {
 }
 
 .hero-left {
-  animation-delay: 0.16s;
+  display: none;
 }
 
 .hero-right {
