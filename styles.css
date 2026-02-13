@@ -35,7 +35,7 @@ body.player-open {
 .topbar,
 main,
 .footer {
-  width: 100vw !important;
+  width: 100% !important;
   max-width: none !important;
 }
 
@@ -48,8 +48,10 @@ main,
 .about,
 .inquiry,
 .contact {
-  width: 100vw !important;
-  margin-left: calc(50% - 50vw) !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 .topbar {
