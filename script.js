@@ -431,9 +431,7 @@ function openProject02Popup(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  openPlayer(
-    'https://player.vimeo.com/video/1123537845?h=1015681fcb&autoplay=1&title=0&byline=0&portrait=0'
-  );
+  openPlayer('https://player.vimeo.com/video/834062800?autoplay=1&title=0&byline=0&portrait=0');
   requestPlayerFullscreen();
 }
 
@@ -444,7 +442,7 @@ function openProject01Popup(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  openPlayer('https://player.vimeo.com/video/834062800?autoplay=1&title=0&byline=0&portrait=0');
+  openPlayer('https://player.vimeo.com/video/1164505617?autoplay=1&title=0&byline=0&portrait=0');
   requestPlayerFullscreen();
 }
 
@@ -453,7 +451,9 @@ function openProject03Popup(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  openPlayer('https://player.vimeo.com/video/1164509809?fl=tl&fe=ec&autoplay=1&title=0&byline=0&portrait=0');
+  openPlayer(
+    'https://player.vimeo.com/video/1123537845?h=1015681fcb&autoplay=1&title=0&byline=0&portrait=0'
+  );
   requestPlayerFullscreen();
 }
 
@@ -462,7 +462,7 @@ function openProject04Popup(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  openPlayer('https://player.vimeo.com/video/1164506458?fl=tl&fe=ec&autoplay=1&title=0&byline=0&portrait=0');
+  openPlayer('https://player.vimeo.com/video/1164509809?fl=tl&fe=ec&autoplay=1&title=0&byline=0&portrait=0');
   requestPlayerFullscreen();
 }
 
@@ -471,7 +471,7 @@ function openProject05Popup(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  openPlayer('https://player.vimeo.com/video/1091937617?autoplay=1&title=0&byline=0&portrait=0');
+  openPlayer('https://player.vimeo.com/video/1164506458?fl=tl&fe=ec&autoplay=1&title=0&byline=0&portrait=0');
   requestPlayerFullscreen();
 }
 
@@ -480,7 +480,7 @@ function openProject06Popup(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  openPlayer('https://player.vimeo.com/video/1118476418?autoplay=1&title=0&byline=0&portrait=0');
+  openPlayer('https://player.vimeo.com/video/1091937617?autoplay=1&title=0&byline=0&portrait=0');
   requestPlayerFullscreen();
 }
 
@@ -489,7 +489,7 @@ function openProject07Popup(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  openPlayer('https://player.vimeo.com/video/1164505617?autoplay=1&title=0&byline=0&portrait=0');
+  openPlayer('https://player.vimeo.com/video/1118476418?autoplay=1&title=0&byline=0&portrait=0');
   requestPlayerFullscreen();
 }
 
