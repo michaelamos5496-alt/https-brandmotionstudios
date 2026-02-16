@@ -6,6 +6,7 @@ const project03Media = document.getElementById('project03Media');
 const project04Media = document.getElementById('project04Media');
 const project05Media = document.getElementById('project05Media');
 const project06Media = document.getElementById('project06Media');
+const project07Media = document.getElementById('project07Media');
 const projectPlayButtons = Array.from(document.querySelectorAll('[data-open-project]'));
 const nextThreeBtn = document.getElementById('nextThreeBtn');
 const playerOverlay = document.getElementById('playerOverlay');
@@ -483,6 +484,15 @@ function openProject06Popup(event) {
   requestPlayerFullscreen();
 }
 
+function openProject07Popup(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  openPlayer('https://player.vimeo.com/video/1164505617?autoplay=1&title=0&byline=0&portrait=0');
+  requestPlayerFullscreen();
+}
+
 function openProjectById(projectId, event) {
   trackEvent('play_video_click', { project_id: projectId || 'unknown' });
   if (projectId === '01') return openProject01Popup(event);
@@ -491,6 +501,7 @@ function openProjectById(projectId, event) {
   if (projectId === '04') return openProject04Popup(event);
   if (projectId === '05') return openProject05Popup(event);
   if (projectId === '06') return openProject06Popup(event);
+  if (projectId === '07') return openProject07Popup(event);
 }
 
 window.openProjectById = openProjectById;
@@ -552,6 +563,13 @@ if (project06Media) {
   project06Media.addEventListener('click', (event) => {
     if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
     openProject06Popup(event);
+  });
+}
+
+if (project07Media) {
+  project07Media.addEventListener('click', (event) => {
+    if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
+    openProject07Popup(event);
   });
 }
 

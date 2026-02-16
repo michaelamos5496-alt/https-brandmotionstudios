@@ -14,7 +14,7 @@
 html,
 body {
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   background: var(--bg);
@@ -24,22 +24,20 @@ body {
   overflow-x: hidden;
 }
 
-/* Hard full-bleed layout to ensure desktop fills browser width */
+/* Full-bleed base layout */
 body > .topbar,
 body > main,
 body > .footer {
-  width: 100vw !important;
+  width: 100% !important;
   max-width: none !important;
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: 0 !important;
+  margin: 0 !important;
 }
 
 main > section,
 main > .portfolio {
-  width: 100vw !important;
+  width: 100% !important;
   max-width: none !important;
-  margin-left: calc(50% - 50vw) !important;
-  margin-right: 0 !important;
+  margin: 0 !important;
 }
 
 a {
@@ -160,6 +158,7 @@ main,
 
 main {
   width: 100%;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
 }
@@ -496,7 +495,9 @@ main {
 #project-05.in-view .media-title-feature,
 #project-05.is-active .media-title-feature,
 #project-06.in-view .media-title-feature,
-#project-06.is-active .media-title-feature {
+#project-06.is-active .media-title-feature,
+#project-07.in-view .media-title-feature,
+#project-07.is-active .media-title-feature {
   animation: projectTitleReveal 0.95s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
     projectTitleDrift 7.5s ease-in-out 1s infinite;
 }
@@ -1523,33 +1524,4 @@ main {
     flex-direction: column;
     gap: 0.55rem;
   }
-}
-
-/* Fixed 1920x1080 page canvas */
-html,
-body {
-  min-width: 1920px;
-}
-
-body > .topbar,
-body > main,
-body > .footer {
-  width: 1920px !important;
-  max-width: 1920px !important;
-  margin-left: calc(50% - 960px) !important;
-  margin-right: 0 !important;
-}
-
-main > section,
-main > .portfolio {
-  width: 1920px !important;
-  max-width: 1920px !important;
-  margin-left: calc(50% - 960px) !important;
-  margin-right: 0 !important;
-}
-
-.hero,
-.featured,
-.work-item {
-  min-height: 1080px !important;
 }
