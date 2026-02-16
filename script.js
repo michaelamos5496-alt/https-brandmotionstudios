@@ -26,7 +26,56 @@ const localPreviewVideos = Array.from(
 const portfolioCards = Array.from(document.querySelectorAll('.work-item'));
 const cardsPerPage = 3;
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const heroSlideEls = Array.from(document.querySelectorAll('.hero-slide'));
+const heroBtsImages = [
+  "https://images.pixieset.com/443758701/dbaaa1319f44656b22e2d46608f8a2c2-xxlarge.jpg",
+  "https://images.pixieset.com/443758701/da1f1a97ebe986f1a70476a15413e135-xxlarge.jpg",
+  "https://images.pixieset.com/443758701/f42eb2e99894a30990a85529b2edc08b-xxlarge.jpg",
+  "https://images.pixieset.com/443758701/01b88df056310d4e7958d2d047bb05c5-xxlarge.jpg",
+  "https://images.pixieset.com/443758701/a76d64efc01d11cda17c95e37876da88-xxlarge.jpg",
+  "https://images.pixieset.com/443758701/FnSa3tuGX8_t1767909644-9eefd635701016ab79e7aa77d8b9c33f.jpg",
+  "https://images.pixieset.com/443758701/53ced2d7f457532be49620791576e6f7-xxlarge.jpg",
+  "https://images.pixieset.com/443758701/c6834bcff9d3d557540383641a013eaf-xxlarge.jpg"
+];
 let currentPage = 0;
+
+function resetHeroDolly(slide) {
+  if (!slide) return;
+  slide.style.animation = 'none';
+  // force reflow so the dolly animation restarts on each new slide
+  void slide.offsetWidth;
+  slide.style.animation = '';
+}
+
+function startHeroSlideshow() {
+  if (!heroSlideEls.length || !heroBtsImages.length) return;
+
+  const first = heroSlideEls[0];
+  const second = heroSlideEls[1];
+  first.src = heroBtsImages[0];
+  first.classList.add('is-active');
+  resetHeroDolly(first);
+  if (second) second.src = heroBtsImages[1 % heroBtsImages.length];
+
+  if (prefersReducedMotion.matches || heroSlideEls.length < 2 || heroBtsImages.length < 2) return;
+
+  let activeSlot = 0;
+  let nextImageIndex = 1;
+
+  window.setInterval(() => {
+    const nextSlot = activeSlot === 0 ? 1 : 0;
+    const currentSlide = heroSlideEls[activeSlot];
+    const nextSlide = heroSlideEls[nextSlot];
+    nextImageIndex = (nextImageIndex + 1) % heroBtsImages.length;
+    nextSlide.src = heroBtsImages[nextImageIndex];
+    nextSlide.classList.add('is-active');
+    resetHeroDolly(nextSlide);
+    currentSlide.classList.remove('is-active');
+    activeSlot = nextSlot;
+  }, 9000);
+}
+
+startHeroSlideshow();
 
 function trackEvent(name, params = {}) {
   if (!name) return;
