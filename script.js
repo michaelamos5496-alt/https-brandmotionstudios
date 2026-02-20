@@ -118,10 +118,12 @@ const dialCodeByCountry = {
   Colombia: "+57",
   Comoros: "+269",
   Congo: "+242",
+  "Congo (Congo-Brazzaville)": "+242",
   Croatia: "+385",
   Cuba: "+53",
   Cyprus: "+357",
   Czechia: "+420",
+  "Democratic Republic of the Congo": "+243",
   Denmark: "+45",
   Djibouti: "+253",
   Ecuador: "+593",
@@ -235,10 +237,17 @@ let lastAutoDialCode = "";
 
 function applyDialCodeForCountry(country) {
   if (!phoneInput) return;
-  const dialCode = dialCodeByCountry[country] || "+";
+  const dialCode = dialCodeByCountry[country];
   const currentValue = phoneInput.value.trim();
   const isEmpty = currentValue.length === 0;
   const hadPreviousAutoPrefix = lastAutoDialCode && currentValue.startsWith(lastAutoDialCode);
+
+  if (!dialCode) {
+    // Don't overwrite typed values for countries without a mapped dial code.
+    phoneInput.placeholder = "+...";
+    lastAutoDialCode = "";
+    return;
+  }
 
   phoneInput.placeholder = `${dialCode} ...`;
   if (isEmpty || hadPreviousAutoPrefix) {
