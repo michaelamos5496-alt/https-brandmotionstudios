@@ -497,7 +497,9 @@ main {
 #project-06.in-view .media-title-feature,
 #project-06.is-active .media-title-feature,
 #project-07.in-view .media-title-feature,
-#project-07.is-active .media-title-feature {
+#project-07.is-active .media-title-feature,
+#project-08.in-view .media-title-feature,
+#project-08.is-active .media-title-feature {
   animation: projectTitleReveal 0.95s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
     projectTitleDrift 7.5s ease-in-out 1s infinite;
 }
