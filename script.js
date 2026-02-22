@@ -8,6 +8,7 @@ const project05Media = document.getElementById('project05Media');
 const project06Media = document.getElementById('project06Media');
 const project07Media = document.getElementById('project07Media');
 const project08Media = document.getElementById('project08Media');
+const project09Media = document.getElementById('project09Media');
 const projectPlayButtons = Array.from(document.querySelectorAll('[data-open-project]'));
 const nextThreeBtn = document.getElementById('nextThreeBtn');
 const playerOverlay = document.getElementById('playerOverlay');
@@ -441,7 +442,9 @@ function openProject02Popup(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  openPlayer('https://player.vimeo.com/video/1164505617?autoplay=1&title=0&byline=0&portrait=0');
+  openPlayer(
+    'https://www.youtube.com/embed/5_SDB5Ozl20?autoplay=1&mute=1&loop=1&playlist=5_SDB5Ozl20&controls=1&rel=0'
+  );
   requestPlayerFullscreen();
 }
 
@@ -463,11 +466,20 @@ function openProject03Popup(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  openPlayer('https://player.vimeo.com/video/834062800?autoplay=1&title=0&byline=0&portrait=0');
+  openPlayer('https://player.vimeo.com/video/1164505617?autoplay=1&title=0&byline=0&portrait=0');
   requestPlayerFullscreen();
 }
 
 function openProject04Popup(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  openPlayer('https://player.vimeo.com/video/834062800?autoplay=1&title=0&byline=0&portrait=0');
+  requestPlayerFullscreen();
+}
+
+function openProject05Popup(event) {
   if (event) {
     event.preventDefault();
     event.stopPropagation();
@@ -478,7 +490,7 @@ function openProject04Popup(event) {
   requestPlayerFullscreen();
 }
 
-function openProject05Popup(event) {
+function openProject06Popup(event) {
   if (event) {
     event.preventDefault();
     event.stopPropagation();
@@ -487,7 +499,7 @@ function openProject05Popup(event) {
   requestPlayerFullscreen();
 }
 
-function openProject06Popup(event) {
+function openProject07Popup(event) {
   if (event) {
     event.preventDefault();
     event.stopPropagation();
@@ -496,7 +508,7 @@ function openProject06Popup(event) {
   requestPlayerFullscreen();
 }
 
-function openProject07Popup(event) {
+function openProject08Popup(event) {
   if (event) {
     event.preventDefault();
     event.stopPropagation();
@@ -505,7 +517,7 @@ function openProject07Popup(event) {
   requestPlayerFullscreen();
 }
 
-function openProject08Popup(event) {
+function openProject09Popup(event) {
   if (event) {
     event.preventDefault();
     event.stopPropagation();
@@ -524,6 +536,7 @@ function openProjectById(projectId, event) {
   if (projectId === '06') return openProject06Popup(event);
   if (projectId === '07') return openProject07Popup(event);
   if (projectId === '08') return openProject08Popup(event);
+  if (projectId === '09') return openProject09Popup(event);
 }
 
 window.openProjectById = openProjectById;
@@ -599,6 +612,13 @@ if (project08Media) {
   project08Media.addEventListener('click', (event) => {
     if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
     openProject08Popup(event);
+  });
+}
+
+if (project09Media) {
+  project09Media.addEventListener('click', (event) => {
+    if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
+    openProject09Popup(event);
   });
 }
 
