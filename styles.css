@@ -4,7 +4,8 @@
   --line: #242424;
   --text: #f5f5f5;
   --muted: #a6a6a6;
-  --max: 1680px;
+  --max: 1280px;
+  --gutter: clamp(0.75rem, 2.2vw, 1.6rem);
 }
 
 * {
@@ -22,22 +23,6 @@ body {
   font-family: "Montserrat", sans-serif;
   scroll-behavior: smooth;
   overflow-x: hidden;
-}
-
-/* Full-bleed base layout */
-body > .topbar,
-body > main,
-body > .footer {
-  width: 100% !important;
-  max-width: none !important;
-  margin: 0 !important;
-}
-
-main > section,
-main > .portfolio {
-  width: 100% !important;
-  max-width: none !important;
-  margin: 0 !important;
 }
 
 a {
@@ -76,23 +61,18 @@ body::after {
 .topbar,
 main,
 .footer {
-  width: 100% !important;
-  max-width: none !important;
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
 }
 
-.hero,
-.featured,
-.portfolio,
-.bts,
-.services,
-.process,
-.about,
-.inquiry,
-.contact {
-  width: 100% !important;
-  max-width: none !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+main > section,
+main > .portfolio {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
 }
 
 .topbar {
