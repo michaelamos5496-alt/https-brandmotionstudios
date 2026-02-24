@@ -33,6 +33,20 @@ a {
   color: inherit;
 }
 
+.featured-overlay p,
+.work-meta p,
+.bts-head p,
+.services-head p,
+.process-head p,
+.service-card p,
+.process-step p,
+.inquiry-head p,
+.about p,
+.contact p {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
 body.player-open {
   overflow: hidden;
 }
