@@ -72,9 +72,9 @@ body::after {
 }
 
 main {
-  width: min(var(--max), calc(100% - 2rem));
-  max-width: var(--max);
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
   padding-left: 0;
   padding-right: 0;
 }
@@ -84,7 +84,7 @@ main > .portfolio {
   width: 100%;
   max-width: 100%;
   margin: 0;
-  min-height: calc(100svh - 8px);
+  min-height: 100vh;
   scroll-snap-align: start;
 }
 
@@ -1309,9 +1309,9 @@ main {
   }
 
   main {
-    width: min(var(--max), calc(100% - 2rem));
-    max-width: var(--max);
-    margin: 0 auto;
+    width: 100%;
+    max-width: none;
+    margin: 0;
     padding: 0;
   }
 
@@ -1421,9 +1421,9 @@ main {
   }
 
   main {
-    width: min(var(--max), calc(100% - 2rem));
-    max-width: var(--max);
-    margin: 0 auto;
+    width: 100%;
+    max-width: none;
+    margin: 0;
     padding: 0;
   }
 
