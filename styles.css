@@ -63,13 +63,20 @@ body::after {
 }
 
 .topbar,
-main,
 .footer {
   width: 100%;
   max-width: none;
   margin: 0;
   padding-left: clamp(0.9rem, 2.2vw, 2.2rem);
   padding-right: clamp(0.9rem, 2.2vw, 2.2rem);
+}
+
+main {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 main > section,
@@ -145,11 +152,9 @@ main > .portfolio {
 }
 
 main {
-  width: 100%;
-  max-width: none;
   min-height: 100vh;
-  margin: 0;
-  padding: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .hero {
