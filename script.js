@@ -16,7 +16,6 @@ const playerFrame = document.getElementById('playerFrame');
 const playerVideo = document.getElementById('playerVideo');
 const playerCloseBtn = document.getElementById('playerCloseBtn');
 const inquiryForm = document.querySelector('form.inquiry-form');
-const reviewForm = document.querySelector('form.review-form');
 const whatsappLink = document.querySelector('a[href^="https://wa.me/"]');
 const countrySelect = document.getElementById('countrySelect');
 const projectLocationSelect = document.getElementById('projectLocationSelect');
@@ -668,12 +667,6 @@ if (whatsappLink) {
 if (inquiryForm) {
   inquiryForm.addEventListener('submit', () => {
     trackEvent('inquiry_submit', { form: 'project-inquiry' });
-  });
-}
-
-if (reviewForm) {
-  reviewForm.addEventListener('submit', () => {
-    trackEvent('review_submit', { form: 'client-review' });
   });
 }
 
