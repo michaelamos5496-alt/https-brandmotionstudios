@@ -896,7 +896,8 @@ main {
 .bts,
 .services,
 .process,
-.inquiry {
+.inquiry,
+.reviews {
   padding: clamp(2.2rem, 6vw, 5rem) 0;
   border-bottom: 1px solid var(--line);
 }
@@ -904,7 +905,8 @@ main {
 .bts-head h2,
 .services-head h2,
 .process h2,
-.inquiry-head h2 {
+.inquiry-head h2,
+.reviews-head h2 {
   margin: 0 0 0.7rem;
   font-size: clamp(1.5rem, 4.8vw, 3.4rem);
   line-height: 1.03;
@@ -914,7 +916,8 @@ main {
 .bts-head p,
 .services-head p,
 .process p,
-.inquiry-head p {
+.inquiry-head p,
+.reviews-head p {
   color: #cecece;
 }
 
@@ -1025,6 +1028,68 @@ main {
 
 .inquiry-form .full {
   grid-column: 1 / -1;
+}
+
+.review-form {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.review-form label,
+.review-form legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.review-form input,
+.review-form select,
+.review-form textarea {
+  width: 100%;
+  border: 1px solid #353535;
+  background: #111;
+  color: var(--text);
+  padding: 0.7rem 0.75rem;
+  font: inherit;
+}
+
+.review-form textarea {
+  resize: vertical;
+  min-height: 130px;
+}
+
+.review-form .full {
+  grid-column: 1 / -1;
+}
+
+.rating-field {
+  margin: 0;
+  border: 1px solid #353535;
+  background: #111;
+  padding: 0.7rem 0.75rem;
+  min-height: 100%;
+}
+
+.rating-options {
+  margin-top: 0.55rem;
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.rating-options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #ececec;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
 }
 
 .about {
@@ -1317,6 +1382,10 @@ main {
     grid-template-columns: 1fr;
   }
 
+  .review-form {
+    grid-template-columns: 1fr;
+  }
+
   .work-item {
     min-height: auto;
     padding: 1.25rem 0;
@@ -1421,14 +1490,16 @@ main {
   .bts,
   .services,
   .process,
-  .inquiry {
+  .inquiry,
+  .reviews {
     padding: 1.8rem 0;
   }
 
   .bts-head h2,
   .services-head h2,
   .process h2,
-  .inquiry-head h2 {
+  .inquiry-head h2,
+  .reviews-head h2 {
     font-size: clamp(1.2rem, 9vw, 2rem);
   }
 
