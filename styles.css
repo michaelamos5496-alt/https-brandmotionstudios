@@ -17,6 +17,7 @@ html,
 body {
   width: 100%;
   min-height: 100vh;
+  height: 100%;
   margin: 0;
   padding: 0;
   background: var(--bg);
@@ -24,6 +25,8 @@ body {
   font-family: "Montserrat", sans-serif;
   scroll-behavior: smooth;
   overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  scroll-padding-top: 78px;
 }
 
 a {
@@ -63,10 +66,10 @@ body::after {
 main,
 .footer {
   width: 100%;
-  max-width: var(--max);
-  margin: 0 auto;
-  padding-left: var(--gutter);
-  padding-right: var(--gutter);
+  max-width: none;
+  margin: 0;
+  padding-left: clamp(0.9rem, 2.2vw, 2.2rem);
+  padding-right: clamp(0.9rem, 2.2vw, 2.2rem);
 }
 
 main > section,
@@ -74,11 +77,15 @@ main > .portfolio {
   width: 100%;
   max-width: 100%;
   margin: 0;
+  min-height: calc(100svh - 8px);
+  scroll-snap-align: start;
 }
 
 .topbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 20;
   width: 100%;
   margin: 0;
@@ -139,13 +146,14 @@ main > .portfolio {
 
 main {
   width: 100%;
+  max-width: none;
   min-height: 100vh;
   margin: 0;
   padding: 0;
 }
 
 .hero {
-  min-height: calc(100svh - 76px);
+  min-height: 100svh;
   display: grid;
   grid-template-columns: 1fr;
   gap: 0;
@@ -259,7 +267,7 @@ main {
 }
 
 .featured {
-  min-height: calc(100svh - 76px);
+  min-height: 100svh;
   padding: 0;
   border-bottom: 1px solid var(--line);
 }
@@ -269,7 +277,7 @@ main {
   border: 0;
   background: #090909;
   overflow: hidden;
-  min-height: calc(100svh - 76px);
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -295,6 +303,33 @@ main {
   bottom: clamp(1rem, 4vw, 2.4rem);
   max-width: min(90%, 840px);
   z-index: 2;
+}
+
+.section-top-center {
+  width: 100%;
+  max-width: min(92%, 980px);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section-top-center p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.featured-overlay.section-top-center {
+  left: 50%;
+  top: clamp(1rem, 3vw, 2rem);
+  bottom: auto;
+  transform: translateX(-50%);
+}
+
+.featured-overlay.section-top-center p {
+  max-width: 70ch;
+}
+
+.process-head {
+  margin-bottom: 1.1rem;
 }
 
 .featured-overlay h2 {
@@ -331,7 +366,7 @@ main {
 }
 
 .work-item {
-  min-height: calc(100svh - 76px);
+  min-height: 100svh;
   padding: clamp(0.7rem, 2vw, 1.1rem) 0;
   border-bottom: 1px solid var(--line);
   display: grid;
@@ -1295,6 +1330,14 @@ main {
     max-width: none;
   }
 
+  .featured-overlay.section-top-center {
+    left: 50%;
+    right: auto;
+    top: 1rem;
+    transform: translateX(-50%);
+    width: calc(100% - 2rem);
+  }
+
   .featured-overlay h2 {
     font-size: clamp(1.5rem, 8vw, 3.2rem);
     line-height: 1;
@@ -1354,6 +1397,11 @@ main {
 }
 
 @media (max-width: 640px) {
+  html,
+  body {
+    scroll-snap-type: y proximity;
+  }
+
   body::before,
   body::after {
     width: 8px;
