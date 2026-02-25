@@ -597,6 +597,16 @@ window.openProjectById = openProjectById;
 
 function openProjectFromElement(element, event) {
   if (!element || typeof element.closest !== 'function') return false;
+  const directUrl = element.getAttribute('data-play-url');
+  if (directUrl) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    openPlayer(buildPopupUrlFromPreview(directUrl));
+    requestPlayerFullscreen();
+    return true;
+  }
   const article = element.closest('.work-item');
   if (!article || !article.id || !article.id.startsWith('project-')) return false;
   const projectId = article.id.replace('project-', '');
