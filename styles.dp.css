@@ -484,7 +484,7 @@ main > .portfolio {
   gap: 0.75rem;
   width: max-content;
   padding: 0.75rem;
-  animation: btsScroll 56s linear infinite;
+  animation: btsScrollLeft 56s linear infinite;
 }
 
 .bts-strip:hover .bts-track {
@@ -492,7 +492,7 @@ main > .portfolio {
 }
 
 .bts-strip-reverse .bts-track {
-  animation-direction: reverse;
+  animation: btsScrollRight 56s linear infinite;
 }
 
 .bts-slide {
@@ -502,6 +502,15 @@ main > .portfolio {
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bts-slide img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  background: #0d121f;
 }
 
 .services-grid,
@@ -731,12 +740,21 @@ main > .portfolio {
   }
 }
 
-@keyframes btsScroll {
+@keyframes btsScrollLeft {
   from {
     transform: translateX(0);
   }
   to {
     transform: translateX(-50%);
+  }
+}
+
+@keyframes btsScrollRight {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
   }
 }
 
