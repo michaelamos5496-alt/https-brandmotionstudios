@@ -1574,3 +1574,20 @@ main {
     gap: 0.55rem;
   }
 }
+
+/* Content safe-area: keep sections full-bleed but pull text/cards off the edges */
+:root {
+  --content-safe: clamp(1.25rem, 4vw, 4.5rem);
+}
+
+.bts-head,
+.services-head,
+.process-head,
+.inquiry-head,
+.services-grid,
+.process-grid,
+.bts-strip,
+.portfolio-pager {
+  padding-left: var(--content-safe) !important;
+  padding-right: var(--content-safe) !important;
+}
