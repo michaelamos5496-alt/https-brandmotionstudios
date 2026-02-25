@@ -591,6 +591,12 @@ main > .portfolio {
   text-align: center;
 }
 
+#about {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
 .about > div {
   width: min(100%, 900px);
 }
