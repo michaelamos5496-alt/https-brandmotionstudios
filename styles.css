@@ -1555,8 +1555,50 @@ main {
     font-size: clamp(1.6rem, 12vw, 2.5rem);
   }
 
-  .footer {
+.footer {
     flex-direction: column;
     gap: 0.55rem;
   }
+}
+
+/* Final hard override: force true full-bleed viewport layout on all sections */
+html,
+body {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: clip !important;
+}
+
+main,
+#home,
+main > section,
+main > .portfolio,
+.hero,
+.featured,
+.featured-media,
+.portfolio,
+.work-item,
+.bts,
+.services,
+.process,
+.inquiry,
+.about,
+.contact,
+.footer,
+.topbar {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+}
+
+main > section,
+main > .portfolio,
+.hero,
+.featured,
+.featured-media,
+.work-item {
+  min-height: 100dvh !important;
 }
