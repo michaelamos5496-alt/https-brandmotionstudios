@@ -475,6 +475,10 @@ main > .portfolio {
   background: #0d121f;
 }
 
+.bts-strip + .bts-strip {
+  margin-top: 0.7rem;
+}
+
 .bts-track {
   display: flex;
   gap: 0.75rem;
@@ -485,6 +489,10 @@ main > .portfolio {
 
 .bts-strip:hover .bts-track {
   animation-play-state: paused;
+}
+
+.bts-strip-reverse .bts-track {
+  animation-direction: reverse;
 }
 
 .bts-slide {
