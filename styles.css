@@ -9,7 +9,7 @@
   --accent-soft: rgba(198, 167, 94, 0.18);
   --edge: clamp(1rem, 3vw, 2.75rem);
   --section-pad: clamp(2.5rem, 8vw, 7rem);
-  --radius: 18px;
+  --radius: 24px;
   --shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
 }
 
@@ -185,6 +185,11 @@ main > .portfolio {
   box-shadow: var(--shadow);
 }
 
+.featured-media iframe,
+.featured-media video {
+  border-radius: inherit;
+}
+
 .featured-media::after {
   content: "";
   position: absolute;
@@ -302,6 +307,7 @@ main > .portfolio {
   min-height: 100%;
   border: 0;
   display: block;
+  border-radius: inherit;
 }
 
 .media-still iframe,
