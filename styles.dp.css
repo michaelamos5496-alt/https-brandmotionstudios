@@ -475,16 +475,24 @@ main > .portfolio {
   background: #0d121f;
 }
 
+.bts-strip + .bts-strip {
+  margin-top: 0.7rem;
+}
+
 .bts-track {
   display: flex;
   gap: 0.75rem;
   width: max-content;
   padding: 0.75rem;
-  animation: btsScroll 42s linear infinite;
+  animation: btsScroll 56s linear infinite;
 }
 
 .bts-strip:hover .bts-track {
   animation-play-state: paused;
+}
+
+.bts-strip-reverse .bts-track {
+  animation-direction: reverse;
 }
 
 .bts-slide {
