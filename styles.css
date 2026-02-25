@@ -7,7 +7,7 @@
   --accent: #c6a75e;
   --max: 1200px;
   --gutter: clamp(0.75rem, 2.2vw, 1.6rem);
-  --edge-pad: clamp(0.9rem, 2.4vw, 2.4rem);
+  --edge-pad: clamp(1.4rem, 4.2vw, 5rem);
 }
 
 * {
@@ -1575,9 +1575,23 @@ main {
   }
 }
 
-/* Content safe-area: keep sections full-bleed but pull text/cards off the edges */
-:root {
-  --content-safe: clamp(1.25rem, 4vw, 4.5rem);
+/* Reference sizing/alignment rail: full-bleed sections with centered content frame */
+.hero-right,
+.work-item,
+.portfolio-pager,
+.bts-head,
+.services-head,
+.process-head,
+.inquiry-head,
+.bts-strip,
+.services-grid,
+.process-grid,
+.inquiry-form,
+.about,
+.contact {
+  width: min(100%, 1760px);
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 .bts-head,
@@ -1588,6 +1602,6 @@ main {
 .process-grid,
 .bts-strip,
 .portfolio-pager {
-  padding-left: var(--content-safe) !important;
-  padding-right: var(--content-safe) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
