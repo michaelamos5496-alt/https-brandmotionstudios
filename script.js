@@ -437,6 +437,68 @@ function openPlayer(url) {
   requestAnimationFrame(() => playerOverlay.classList.add('is-open'));
 }
 
+function buildPopupUrlFromPreview(previewUrl) {
+  if (!previewUrl) return '';
+
+  let parsed;
+  try {
+    parsed = new URL(previewUrl, window.location.origin);
+  } catch {
+    return previewUrl;
+  }
+
+  const host = parsed.hostname.toLowerCase();
+
+  // Keep the same video, but ensure popup playback controls are available.
+  if (host.includes('youtube.com') || host.includes('youtu.be')) {
+    parsed.searchParams.set('autoplay', '1');
+    parsed.searchParams.set('controls', '1');
+    parsed.searchParams.set('rel', '0');
+    parsed.searchParams.delete('background');
+    return parsed.toString();
+  }
+
+  if (host.includes('vimeo.com')) {
+    parsed.searchParams.set('autoplay', '1');
+    parsed.searchParams.set('muted', '0');
+    parsed.searchParams.set('background', '0');
+    parsed.searchParams.set('title', '0');
+    parsed.searchParams.set('byline', '0');
+    parsed.searchParams.set('portrait', '0');
+    return parsed.toString();
+  }
+
+  return parsed.toString();
+}
+
+function openProjectFromCard(projectId, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  if (!projectId) return false;
+
+  const article = document.getElementById(`project-${projectId}`);
+  if (!article) return false;
+
+  const previewIframe = article.querySelector('.media-still iframe');
+  if (previewIframe && previewIframe.src) {
+    openPlayer(buildPopupUrlFromPreview(previewIframe.src));
+    requestPlayerFullscreen();
+    return true;
+  }
+
+  const previewVideo = article.querySelector('.media-still video');
+  const videoSrc = previewVideo?.currentSrc || previewVideo?.src || '';
+  if (videoSrc) {
+    openPlayer(videoSrc);
+    requestPlayerFullscreen();
+    return true;
+  }
+
+  return false;
+}
+
 function openProject02Popup(event) {
   if (event) {
     event.preventDefault();
@@ -528,6 +590,7 @@ function openProject09Popup(event) {
 
 function openProjectById(projectId, event) {
   trackEvent('play_video_click', { project_id: projectId || 'unknown' });
+  if (openProjectFromCard(projectId, event)) return;
   if (projectId === '01') return openProject01Popup(event);
   if (projectId === '02') return openProject02Popup(event);
   if (projectId === '03') return openProject03Popup(event);
@@ -562,63 +625,63 @@ function clickedInteractiveInsideMedia(event) {
 if (project02Media) {
   project02Media.addEventListener('click', (event) => {
     if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProject02Popup(event);
+    openProjectById('02', event);
   });
 }
 
 if (project01Media) {
   project01Media.addEventListener('click', (event) => {
     if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProject01Popup(event);
+    openProjectById('01', event);
   });
 }
 
 if (project03Media) {
   project03Media.addEventListener('click', (event) => {
     if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProject03Popup(event);
+    openProjectById('03', event);
   });
 }
 
 if (project04Media) {
   project04Media.addEventListener('click', (event) => {
     if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProject04Popup(event);
+    openProjectById('04', event);
   });
 }
 
 if (project05Media) {
   project05Media.addEventListener('click', (event) => {
     if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProject05Popup(event);
+    openProjectById('05', event);
   });
 }
 
 if (project06Media) {
   project06Media.addEventListener('click', (event) => {
     if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProject06Popup(event);
+    openProjectById('06', event);
   });
 }
 
 if (project07Media) {
   project07Media.addEventListener('click', (event) => {
     if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProject07Popup(event);
+    openProjectById('07', event);
   });
 }
 
 if (project08Media) {
   project08Media.addEventListener('click', (event) => {
     if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProject08Popup(event);
+    openProjectById('08', event);
   });
 }
 
 if (project09Media) {
   project09Media.addEventListener('click', (event) => {
     if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProject09Popup(event);
+    openProjectById('09', event);
   });
 }
 
