@@ -458,8 +458,7 @@ main > .portfolio {
 .process-head p,
 .inquiry-head p,
 .service-card p,
-.process-step p,
-.about p {
+.process-step p {
   margin: 0;
   color: #d2d8ee;
   line-height: 1.62;
