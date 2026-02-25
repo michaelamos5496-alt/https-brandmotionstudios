@@ -575,10 +575,8 @@ main > .portfolio {
 
 /* About */
 .about {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(430px, 38vw);
-  gap: clamp(1.2rem, 3vw, 2.4rem);
-  align-items: center;
+  display: block;
+  text-align: center;
 }
 
 .about h2 {
@@ -589,15 +587,21 @@ main > .portfolio {
   font-size: clamp(1.65rem, 4vw, 3.2rem);
 }
 
+.about > div:first-child {
+  max-width: 74ch;
+  margin: 0 auto;
+}
+
+.about .kicker,
+.about h2,
+.about p {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .about-image-placeholder {
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: #0d121e;
-  min-height: clamp(340px, 42vw, 720px);
-  aspect-ratio: 4 / 5;
-  justify-self: end;
-  box-shadow: var(--shadow);
+  display: none;
 }
 
 .about-image-placeholder span {
@@ -616,6 +620,11 @@ main > .portfolio {
 .contact a {
   text-decoration: none;
   color: var(--muted);
+}
+
+.contact {
+  align-items: center;
+  text-align: center;
 }
 
 .footer {
