@@ -197,11 +197,14 @@ main {
 
 .hero-right {
   animation-delay: 0.24s;
-  justify-self: center;
-  text-align: center;
+  justify-self: stretch;
+  width: 100%;
+  text-align: left;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  padding-left: clamp(1rem, 3vw, 2.2rem);
+  padding-right: clamp(1rem, 3vw, 2.2rem);
 }
 
 .kicker {
@@ -302,17 +305,21 @@ main {
 
 .featured-overlay {
   position: absolute;
-  left: clamp(1rem, 3vw, 2.2rem);
+  left: 0;
+  right: 0;
   bottom: clamp(1rem, 4vw, 2.4rem);
-  max-width: min(90%, 840px);
+  max-width: none;
+  width: 100%;
+  padding-left: clamp(1rem, 3vw, 2.2rem);
+  padding-right: clamp(1rem, 3vw, 2.2rem);
   z-index: 2;
 }
 
 .section-top-center {
   width: 100%;
-  max-width: min(92%, 980px);
-  margin: 0 auto;
-  text-align: center;
+  max-width: none;
+  margin: 0;
+  text-align: left;
 }
 
 .section-top-center p {
@@ -321,10 +328,11 @@ main {
 }
 
 .featured-overlay.section-top-center {
-  left: 50%;
+  left: 0;
+  right: 0;
   top: clamp(1rem, 3vw, 2rem);
   bottom: auto;
-  transform: translateX(-50%);
+  transform: none;
 }
 
 .featured-overlay.section-top-center p {
@@ -1330,16 +1338,16 @@ main {
   }
 
   .featured-overlay {
-    left: 1rem;
-    right: 1rem;
+    left: 0;
+    right: 0;
     max-width: none;
   }
 
   .featured-overlay.section-top-center {
-    left: 50%;
-    right: auto;
+    left: 0;
+    right: 0;
     top: 1rem;
-    transform: translateX(-50%);
+    transform: none;
     width: calc(100% - 2rem);
   }
 
