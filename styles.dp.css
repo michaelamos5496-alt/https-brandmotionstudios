@@ -585,9 +585,21 @@ main > .portfolio {
 /* About */
 .about {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(430px, 38vw);
-  gap: clamp(1.2rem, 3vw, 2.4rem);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
   align-items: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.about > div {
+  width: min(100%, 900px);
+}
+
+.about p,
+.about .kicker,
+.about h2 {
+  text-align: center;
 }
 
 .about h2 {
@@ -620,6 +632,14 @@ main > .portfolio {
   line-height: 0.95;
   letter-spacing: -0.02em;
   font-size: clamp(2rem, 8vw, 5.4rem);
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
 }
 
 .contact a {
