@@ -590,19 +590,19 @@ function openProject09Popup(event) {
 
 function openProjectById(projectId, event) {
   trackEvent('play_video_click', { project_id: projectId || 'unknown' });
-  if (openProjectFromCard(projectId, event)) return;
-  if (projectId === '01') return openProject01Popup(event);
-  if (projectId === '02') return openProject02Popup(event);
-  if (projectId === '03') return openProject03Popup(event);
-  if (projectId === '04') return openProject04Popup(event);
-  if (projectId === '05') return openProject05Popup(event);
-  if (projectId === '06') return openProject06Popup(event);
-  if (projectId === '07') return openProject07Popup(event);
-  if (projectId === '08') return openProject08Popup(event);
-  if (projectId === '09') return openProject09Popup(event);
+  return openProjectFromCard(projectId, event);
 }
 
 window.openProjectById = openProjectById;
+
+function openProjectFromElement(element, event) {
+  if (!element || typeof element.closest !== 'function') return false;
+  const article = element.closest('.work-item');
+  if (!article || !article.id || !article.id.startsWith('project-')) return false;
+  const projectId = article.id.replace('project-', '');
+  if (!projectId) return false;
+  return openProjectById(projectId, event);
+}
 
 function getEventElementTarget(event) {
   const target = event.target;
@@ -622,72 +622,29 @@ function clickedInteractiveInsideMedia(event) {
   return Boolean(el.closest('a, button, input, textarea, select, label'));
 }
 
-if (project02Media) {
-  project02Media.addEventListener('click', (event) => {
-    if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProjectById('02', event);
+[
+  project01Media,
+  project02Media,
+  project03Media,
+  project04Media,
+  project05Media,
+  project06Media,
+  project07Media,
+  project08Media,
+  project09Media
+]
+  .filter(Boolean)
+  .forEach((mediaEl) => {
+    mediaEl.addEventListener('click', (event) => {
+      if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
+      openProjectFromElement(mediaEl, event);
+    });
   });
-}
-
-if (project01Media) {
-  project01Media.addEventListener('click', (event) => {
-    if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProjectById('01', event);
-  });
-}
-
-if (project03Media) {
-  project03Media.addEventListener('click', (event) => {
-    if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProjectById('03', event);
-  });
-}
-
-if (project04Media) {
-  project04Media.addEventListener('click', (event) => {
-    if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProjectById('04', event);
-  });
-}
-
-if (project05Media) {
-  project05Media.addEventListener('click', (event) => {
-    if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProjectById('05', event);
-  });
-}
-
-if (project06Media) {
-  project06Media.addEventListener('click', (event) => {
-    if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProjectById('06', event);
-  });
-}
-
-if (project07Media) {
-  project07Media.addEventListener('click', (event) => {
-    if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProjectById('07', event);
-  });
-}
-
-if (project08Media) {
-  project08Media.addEventListener('click', (event) => {
-    if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProjectById('08', event);
-  });
-}
-
-if (project09Media) {
-  project09Media.addEventListener('click', (event) => {
-    if (clickedMediaNext(event) || clickedInteractiveInsideMedia(event)) return;
-    openProjectById('09', event);
-  });
-}
 
 if (projectPlayButtons.length) {
   projectPlayButtons.forEach((button) => {
     button.addEventListener('click', (event) => {
+      if (openProjectFromElement(button, event)) return;
       const projectId = button.dataset.openProject;
       openProjectById(projectId, event);
     });
@@ -713,6 +670,7 @@ document.addEventListener('click', (event) => {
   if (!el) return;
   const trigger = el.closest('[data-open-project]');
   if (!trigger) return;
+  if (openProjectFromElement(trigger, event)) return;
   const projectId = trigger.getAttribute('data-open-project');
   openProjectById(projectId, event);
 });
