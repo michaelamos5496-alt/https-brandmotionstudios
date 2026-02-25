@@ -1585,6 +1585,29 @@ main {
   }
 }
 
+/* Final lock: hero title centered + about image right aligned/sized */
+.hero-right {
+  text-align: center !important;
+  align-items: center !important;
+}
+
+.about-image-placeholder {
+  width: min(100%, 520px) !important;
+  aspect-ratio: 4 / 5 !important;
+  min-height: clamp(300px, 36vw, 620px) !important;
+  justify-self: end !important;
+  align-self: start !important;
+}
+
+@media (max-width: 980px) {
+  .about-image-placeholder {
+    width: 100% !important;
+    aspect-ratio: 16 / 10 !important;
+    min-height: clamp(220px, 58vw, 420px) !important;
+    justify-self: stretch !important;
+  }
+}
+
 /* Content safe-area: keep sections full-bleed but pull text/cards off the edges */
 :root {
   --content-safe: clamp(1.25rem, 4vw, 4.5rem);
