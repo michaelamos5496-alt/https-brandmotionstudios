@@ -51,31 +51,6 @@ body.player-open {
   overflow: hidden;
 }
 
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  width: clamp(10px, 1.1vw, 16px);
-  z-index: 1400;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.9) 0 8px,
-    rgba(0, 0, 0, 0.92) 8px 16px
-  );
-  opacity: 0.7;
-}
-
-body::before {
-  left: 0;
-}
-
-body::after {
-  right: 0;
-}
-
 .topbar,
 .footer {
   width: 100%;
@@ -1420,12 +1395,6 @@ main {
   html,
   body {
     scroll-snap-type: y proximity;
-  }
-
-  body::before,
-  body::after {
-    width: 8px;
-    opacity: 0.55;
   }
 
   .topbar {
