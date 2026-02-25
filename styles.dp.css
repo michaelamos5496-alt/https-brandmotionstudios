@@ -599,7 +599,7 @@ main > .portfolio {
 .about p,
 .about .kicker,
 .about h2 {
-  text-align: center;
+  text-align: center !important;
 }
 
 .about h2 {
@@ -639,12 +639,15 @@ main > .portfolio {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  text-align: center;
+  text-align: center !important;
 }
 
 .contact a {
   text-decoration: none;
   color: var(--muted);
+  text-align: center !important;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .footer {
