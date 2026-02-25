@@ -7,6 +7,7 @@
   --accent: #c6a75e;
   --max: 1200px;
   --gutter: clamp(0.75rem, 2.2vw, 1.6rem);
+  --edge-pad: clamp(0.9rem, 2.4vw, 2.4rem);
 }
 
 * {
@@ -67,8 +68,8 @@ body.player-open {
   width: 100%;
   max-width: none;
   margin: 0;
-  padding-left: clamp(0.9rem, 2.2vw, 2.2rem);
-  padding-right: clamp(0.9rem, 2.2vw, 2.2rem);
+  padding-left: var(--edge-pad);
+  padding-right: var(--edge-pad);
 }
 
 main {
@@ -208,8 +209,8 @@ main {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: var(--edge-pad);
+  padding-right: var(--edge-pad);
 }
 
 .kicker {
@@ -315,8 +316,8 @@ main {
   bottom: clamp(1rem, 4vw, 2.4rem);
   max-width: none;
   width: 100%;
-  padding-left: clamp(1rem, 3vw, 2.2rem);
-  padding-right: clamp(1rem, 3vw, 2.2rem);
+  padding-left: var(--edge-pad);
+  padding-right: var(--edge-pad);
   z-index: 2;
 }
 
@@ -383,7 +384,7 @@ main {
 
 .work-item {
   min-height: 100svh;
-  padding: clamp(0.7rem, 2vw, 1.1rem) 0;
+  padding: clamp(0.7rem, 2vw, 1.1rem) var(--edge-pad);
   border-bottom: 1px solid var(--line);
   display: grid;
   grid-template-columns: 1.45fr 0.55fr;
@@ -950,7 +951,7 @@ main {
 .services,
 .process,
 .inquiry {
-  padding: clamp(2.2rem, 6vw, 5rem) 0;
+  padding: clamp(2.2rem, 6vw, 5rem) var(--edge-pad);
   border-bottom: 1px solid var(--line);
 }
 
@@ -1081,7 +1082,7 @@ main {
 }
 
 .about {
-  padding: clamp(3rem, 8vw, 7rem) 0;
+  padding: clamp(3rem, 8vw, 7rem) var(--edge-pad);
   display: grid;
   grid-template-columns: 1fr 380px;
   gap: 1rem;
@@ -1128,7 +1129,7 @@ main {
 }
 
 .contact {
-  padding: clamp(3rem, 8vw, 7rem) 0;
+  padding: clamp(3rem, 8vw, 7rem) var(--edge-pad);
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
