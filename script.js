@@ -28,6 +28,8 @@ const localPreviewVideos = Array.from(
 const portfolioCards = Array.from(document.querySelectorAll('.work-item'));
 const cardsPerPage = 3;
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const hasGsap = typeof window.gsap !== 'undefined';
+const hasScrollTrigger = hasGsap && typeof window.ScrollTrigger !== 'undefined';
 let currentPage = 0;
 
 function trackEvent(name, params = {}) {
@@ -43,6 +45,66 @@ function trackEvent(name, params = {}) {
   if (Array.isArray(window.dataLayer)) {
     window.dataLayer.push({ event: name, ...params });
   }
+}
+
+function initGsapAnimations() {
+  if (!hasGsap || prefersReducedMotion.matches) return false;
+  const gsap = window.gsap;
+
+  if (hasScrollTrigger) {
+    gsap.registerPlugin(window.ScrollTrigger);
+  }
+
+  document.querySelectorAll('.hero .section-reveal').forEach((el) => el.classList.add('visible'));
+
+  gsap.from('.topbar', {
+    y: -20,
+    autoAlpha: 0,
+    duration: 0.8,
+    ease: 'power3.out'
+  });
+
+  gsap.from('.menu a', {
+    y: -10,
+    autoAlpha: 0,
+    duration: 0.55,
+    stagger: 0.08,
+    ease: 'power2.out',
+    delay: 0.12
+  });
+
+  const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  heroTl
+    .from('.hero .kicker', { y: 22, autoAlpha: 0, duration: 0.62 })
+    .from('.hero h1', { y: 36, autoAlpha: 0, duration: 0.82 }, '-=0.32')
+    .from('.hero .scroll-link', { y: 16, autoAlpha: 0, duration: 0.55 }, '-=0.34');
+
+  if (!hasScrollTrigger) {
+    sections.forEach((section) => section.classList.add('visible'));
+    return true;
+  }
+
+  gsap.utils.toArray('.section-reveal').forEach((section) => {
+    if (section.closest('.hero')) return;
+    gsap.fromTo(
+      section,
+      { autoAlpha: 0, y: 42 },
+      {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.85,
+        ease: 'power2.out',
+        onStart: () => section.classList.add('visible'),
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 84%',
+          once: true
+        }
+      }
+    );
+  });
+
+  return true;
 }
 
 const countries = [
@@ -722,19 +784,23 @@ window.addEventListener('pageshow', () => {
   window.scrollTo(0, 0);
 });
 
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.14 }
-);
+const gsapAnimationsReady = initGsapAnimations();
 
-sections.forEach((section) => observer.observe(section));
+if (!gsapAnimationsReady) {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.14 }
+  );
+
+  sections.forEach((section) => observer.observe(section));
+}
 
 if (!prefersReducedMotion.matches) {
   let ticking = false;
