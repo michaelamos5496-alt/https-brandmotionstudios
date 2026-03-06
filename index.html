@@ -598,79 +598,13 @@
           <p class="kicker">Start A Project</p>
           <h2>Tell us what you need, we will respond with next steps.</h2>
         </div>
-        <form
-          class="inquiry-form"
-          name="project-inquiry"
-          method="POST"
-          action="https://formsubmit.co/brandmotionstudios5496@gmail.com"
-        >
-          <input type="hidden" name="_subject" value="New Project Inquiry - BrandMotion Studios" />
-          <input type="hidden" name="_next" value="https://brandmotionstudios.com/thank-you.html" />
-          <input type="hidden" name="_captcha" value="false" />
-          <label>
-            Full Name
-            <input type="text" name="name" required />
-          </label>
-          <label>
-            Email
-            <input type="email" name="email" required />
-          </label>
-          <label>
-            Phone Number
-            <input id="phoneInput" type="tel" name="phone_number" placeholder="+..." required />
-          </label>
-          <label>
-            Project Type
-            <select name="project_type" required>
-              <option value="">Select project type</option>
-              <option>Wedding Film</option>
-              <option>Documentary</option>
-              <option>Fashion Campaign</option>
-              <option>Brand Visuals</option>
-              <option>Architecture / Interior Decor</option>
-              <option>Post-Production</option>
-            </select>
-          </label>
-          <label>
-            How Did You Hear About Us?
-            <select name="referral_source" required>
-              <option value="">Select an option</option>
-              <option>Instagram</option>
-              <option>LinkedIn</option>
-              <option>YouTube</option>
-              <option>Google Search</option>
-              <option>Referral</option>
-              <option>Returning Client</option>
-              <option>Other</option>
-            </select>
-          </label>
-          <label>
-            Country
-            <select id="countrySelect" name="country" required>
-              <option value="">Select country</option>
-            </select>
-          </label>
-          <label>
-            Project Location
-            <select id="projectLocationSelect" name="project_location" required disabled>
-              <option value="">Select country first</option>
-            </select>
-          </label>
-          <label>
-            Preferred Shoot Date
-            <input type="date" name="preferred_shoot_date" required />
-          </label>
-          <label class="full">
-            Project Brief
-            <textarea
-              name="brief"
-              rows="5"
-              placeholder="Share your goals, timeline, location, and deliverables."
-              required
-            ></textarea>
-          </label>
-          <button class="control-btn full" type="submit">Send Inquiry</button>
-        </form>
+        <div class="inquiry-cta">
+          <a
+            class="control-btn inquiry-cta-btn"
+            href="mailto:brandmotionstudios5496@gmail.com?subject=Project%20Inquiry%20-%20BrandMotion%20Studios"
+            >Start A Project</a
+          >
+        </div>
       </section>
 
       <section

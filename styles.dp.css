@@ -550,6 +550,20 @@ main > .portfolio {
   gap: 0.7rem;
 }
 
+.inquiry-cta {
+  width: min(100%, 1800px);
+  margin: 1.1rem auto 0;
+  display: flex;
+  justify-content: center;
+}
+
+.inquiry-cta-btn {
+  min-width: clamp(210px, 24vw, 320px);
+  min-height: 52px;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+}
+
 .inquiry-form label {
   display: flex;
   flex-direction: column;
