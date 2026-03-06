@@ -32,8 +32,10 @@ const cardsPerPage = 3;
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const hasGsap = typeof window.gsap !== 'undefined';
 const hasScrollTrigger = hasGsap && typeof window.ScrollTrigger !== 'undefined';
+const hasObserverPlugin = hasGsap && typeof window.Observer !== 'undefined';
 let currentPage = 0;
 let isMorphTransitionRunning = false;
+let swipeCooldownUntil = 0;
 
 function trackEvent(name, params = {}) {
   if (!name) return;
@@ -87,14 +89,15 @@ function initGsapAnimations() {
     return true;
   }
 
-  gsap.utils.toArray('.section-reveal').forEach((section) => {
+  gsap.utils.toArray('.section-reveal').forEach((section, index) => {
     if (section.closest('.hero')) return;
+    const direction = index % 2 === 0 ? 18 : -18;
     gsap.fromTo(
       section,
-      { autoAlpha: 0, y: 42 },
+      { autoAlpha: 0, xPercent: direction, y: 0 },
       {
         autoAlpha: 1,
-        y: 0,
+        xPercent: 0,
         duration: 0.85,
         ease: 'power2.out',
         onStart: () => section.classList.add('visible'),
@@ -108,6 +111,91 @@ function initGsapAnimations() {
   });
 
   return true;
+}
+
+function getSwipeSections() {
+  return Array.from(document.querySelectorAll('main > section, main > .portfolio')).filter((section) => {
+    if (!(section instanceof HTMLElement)) return false;
+    if (section.offsetParent === null) return false;
+    return true;
+  });
+}
+
+function getClosestSectionIndex(sectionList) {
+  const viewportMid = window.innerHeight / 2;
+  let bestIndex = 0;
+  let bestDistance = Infinity;
+
+  sectionList.forEach((section, index) => {
+    const rect = section.getBoundingClientRect();
+    const center = rect.top + rect.height / 2;
+    const distance = Math.abs(center - viewportMid);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestIndex = index;
+    }
+  });
+
+  return bestIndex;
+}
+
+function isSwipeEligibleSection(section) {
+  if (!section) return false;
+  const rect = section.getBoundingClientRect();
+  const visibleTop = Math.max(rect.top, 0);
+  const visibleBottom = Math.min(rect.bottom, window.innerHeight);
+  const visibleHeight = Math.max(0, visibleBottom - visibleTop);
+  const visibleRatio = visibleHeight / Math.max(1, Math.min(rect.height, window.innerHeight));
+  const compactEnough = section.scrollHeight <= window.innerHeight * 1.35;
+  return compactEnough && visibleRatio >= 0.42;
+}
+
+function getSectionHash(section) {
+  if (!section) return '#home';
+  if (section.id) return `#${section.id}`;
+  return '#home';
+}
+
+function handleSwipeNavigation(delta, observerEvent) {
+  if (Date.now() < swipeCooldownUntil) return;
+  if (isMorphTransitionRunning || document.body.classList.contains('player-open')) return;
+
+  const eventTarget = observerEvent?.event?.target;
+  if (
+    eventTarget instanceof Element &&
+    eventTarget.closest('input, textarea, select, button, iframe, video, .control-btn, .player-overlay')
+  ) {
+    return;
+  }
+
+  const sectionList = getSwipeSections();
+  if (sectionList.length < 2) return;
+
+  const currentIndex = getClosestSectionIndex(sectionList);
+  const currentSection = sectionList[currentIndex];
+  if (!isSwipeEligibleSection(currentSection)) return;
+
+  const nextIndex = Math.max(0, Math.min(sectionList.length - 1, currentIndex + delta));
+  if (nextIndex === currentIndex) return;
+
+  const nextSection = sectionList[nextIndex];
+  swipeCooldownUntil = Date.now() + 900;
+  runMorphTransitionTo(nextSection, getSectionHash(nextSection));
+}
+
+function initGsapSwipeSlider() {
+  if (!hasObserverPlugin || prefersReducedMotion.matches) return;
+  const gsap = window.gsap;
+  gsap.registerPlugin(window.Observer);
+
+  window.Observer.create({
+    target: window,
+    type: 'wheel,touch,pointer',
+    tolerance: 18,
+    preventDefault: false,
+    onDown: (self) => handleSwipeNavigation(1, self),
+    onUp: (self) => handleSwipeNavigation(-1, self)
+  });
 }
 
 function randomMorphRadius() {
@@ -919,6 +1007,7 @@ window.addEventListener('pageshow', () => {
 });
 
 initMorphPageTransitions();
+initGsapSwipeSlider();
 
 const gsapAnimationsReady = initGsapAnimations();
 
