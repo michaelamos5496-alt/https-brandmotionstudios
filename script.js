@@ -43,6 +43,7 @@ const hasObserverPlugin = hasGsap && typeof window.Observer !== 'undefined';
 const hasSplitText = hasGsap && typeof window.SplitText !== 'undefined';
 const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
 const pinPanelsMinWidth = 760;
+const enablePortfolioPanelPinning = false;
 let currentPage = 0;
 let isMorphTransitionRunning = false;
 let swipeCooldownUntil = 0;
@@ -265,6 +266,11 @@ function getVisiblePinnedPanels() {
 }
 
 function initPinnedPanelsWithOverscroll() {
+  if (!enablePortfolioPanelPinning) {
+    clearPinnedPanelTriggers();
+    return;
+  }
+
   if (!hasScrollTrigger || prefersReducedMotion.matches) {
     clearPinnedPanelTriggers();
     return;
