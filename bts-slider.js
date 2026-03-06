@@ -7,19 +7,14 @@
   const seedCards = Array.from(track.children).map((card) => card.cloneNode(true));
   let loopTween = null;
   let resizeTimer = 0;
+  let rebuildRetryCount = 0;
 
-  function cardGapPx() {
-    const styles = window.getComputedStyle(track);
-    const gap = styles.gap || styles.columnGap || "0px";
-    const parsed = Number.parseFloat(gap);
-    return Number.isFinite(parsed) ? parsed : 0;
-  }
-
-  function buildTrackCards() {
+  function buildTrackCards(copyCount) {
     track.innerHTML = "";
     const fragment = document.createDocumentFragment();
-    seedCards.forEach((card) => fragment.appendChild(card.cloneNode(true)));
-    seedCards.forEach((card) => fragment.appendChild(card.cloneNode(true)));
+    for (let i = 0; i < copyCount; i += 1) {
+      seedCards.forEach((card) => fragment.appendChild(card.cloneNode(true)));
+    }
     track.appendChild(fragment);
   }
 
@@ -30,42 +25,36 @@
     const firstDuplicateCard = cards[oneSetCount];
     if (!firstCard || !firstDuplicateCard) return 0;
 
-    // Exact loop distance from set A start to set B start (includes real gap).
     const distance = firstDuplicateCard.offsetLeft - firstCard.offsetLeft;
-    if (distance > 0) return distance;
-
-    // Fallback measurement.
-    const gap = cardGapPx();
-    let width = 0;
-    for (let i = 0; i < oneSetCount; i += 1) {
-      const card = cards[i];
-      if (!card) continue;
-      width += card.getBoundingClientRect().width;
-      if (i < oneSetCount - 1) width += gap;
-    }
-    return width + gap;
+    return distance > 0 ? distance : 0;
   }
 
   function buildLoop() {
-    buildTrackCards();
+    buildTrackCards(2);
     if (loopTween) loopTween.kill();
 
     window.gsap.set(track, { x: 0 });
     const distance = singleSetWidthPx();
-    if (!distance) return;
+    if (!distance) {
+      rebuildRetryCount += 1;
+      if (rebuildRetryCount <= 6) {
+        window.setTimeout(buildLoop, 120);
+      }
+      return;
+    }
+
+    rebuildRetryCount = 0;
+    const minCopies = Math.max(3, Math.ceil(slider.clientWidth / distance) + 2);
+    buildTrackCards(minCopies);
 
     const speed = Number(slider.getAttribute("data-bts-speed")) || 60;
     const duration = Math.max(14, distance / speed);
-    const wrapX = window.gsap.utils.wrap(-distance, 0);
 
-    loopTween = window.gsap.to(track, {
-      x: `-=${distance}`,
+    loopTween = window.gsap.fromTo(track, { x: 0 }, {
+      x: -distance,
       duration,
       ease: "none",
-      repeat: -1,
-      modifiers: {
-        x: (value) => `${wrapX(Number.parseFloat(value) || 0)}px`
-      }
+      repeat: -1
     });
 
     if (prefersReducedMotion.matches) {
