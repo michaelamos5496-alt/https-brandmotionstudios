@@ -42,9 +42,13 @@ const hasScrollTrigger = hasGsap && typeof window.ScrollTrigger !== 'undefined';
 const hasObserverPlugin = hasGsap && typeof window.Observer !== 'undefined';
 const hasSplitText = hasGsap && typeof window.SplitText !== 'undefined';
 const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+const pinPanelsMinWidth = 980;
 let currentPage = 0;
 let isMorphTransitionRunning = false;
 let swipeCooldownUntil = 0;
+let pinnedPanelTriggers = [];
+let pinnedPanelResizeTimer = 0;
+let pinnedPanelRefreshTimer = 0;
 const themeStorageKey = 'bms-theme';
 
 function trackEvent(name, params = {}) {
@@ -238,6 +242,88 @@ function initGsapAnimations() {
   });
 
   return true;
+}
+
+function clearPinnedPanelTriggers() {
+  if (!pinnedPanelTriggers.length) return;
+  pinnedPanelTriggers.forEach((trigger) => {
+    if (trigger && typeof trigger.kill === 'function') trigger.kill();
+  });
+  pinnedPanelTriggers = [];
+  document.querySelectorAll('.portfolio .work-item.is-pinned').forEach((panel) => {
+    panel.classList.remove('is-pinned');
+  });
+}
+
+function getVisiblePinnedPanels() {
+  return Array.from(document.querySelectorAll('.portfolio .work-item')).filter((panel) => {
+    if (!(panel instanceof HTMLElement)) return false;
+    if (panel.classList.contains('page-hidden')) return false;
+    if (panel.offsetParent === null) return false;
+    return true;
+  });
+}
+
+function initPinnedPanelsWithOverscroll() {
+  if (!hasScrollTrigger || prefersReducedMotion.matches) {
+    clearPinnedPanelTriggers();
+    return;
+  }
+
+  if (window.innerWidth < pinPanelsMinWidth) {
+    clearPinnedPanelTriggers();
+    return;
+  }
+
+  clearPinnedPanelTriggers();
+
+  const gsap = window.gsap;
+  const { ScrollTrigger } = window;
+  gsap.registerPlugin(ScrollTrigger);
+  const panels = getVisiblePinnedPanels();
+
+  panels.forEach((panel) => {
+    const media = panel.querySelector('.work-media');
+    const meta = panel.querySelector('.work-meta');
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: panel,
+        start: 'top top+=72',
+        end: () => `+=${Math.max(window.innerHeight * 0.58, panel.offsetHeight * 0.42)}`,
+        pin: true,
+        pinSpacing: true,
+        scrub: 0.8,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        fastScrollEnd: true,
+        onToggle: (self) => panel.classList.toggle('is-pinned', self.isActive)
+      }
+    });
+
+    if (media) tl.to(media, { yPercent: -5.5, scale: 1.02 }, 0);
+    if (meta) tl.to(meta, { yPercent: 4.5 }, 0);
+
+    if (tl.scrollTrigger) {
+      pinnedPanelTriggers.push(tl.scrollTrigger);
+    }
+  });
+
+  if (panels.length) {
+    ScrollTrigger.refresh();
+  }
+}
+
+function schedulePinnedPanelsRebuild(delay = 0) {
+  if (!hasScrollTrigger) return;
+  window.clearTimeout(pinnedPanelRefreshTimer);
+  pinnedPanelRefreshTimer = window.setTimeout(() => {
+    initPinnedPanelsWithOverscroll();
+    if (window.ScrollTrigger) {
+      window.ScrollTrigger.refresh();
+    }
+  }, delay);
 }
 
 function getSwipeSections() {
@@ -785,6 +871,7 @@ function renderPortfolioPage(pageIndex) {
 
   syncPreviewPlaybackForVisibleCards();
   applyWorkParallax();
+  schedulePinnedPanelsRebuild(50);
 }
 
 function pauseLocalPreviews() {
@@ -1176,6 +1263,23 @@ initMobileMenu();
 initMorphPageTransitions();
 initGsapSwipeSlider();
 initAboutSplitAnimation();
+schedulePinnedPanelsRebuild(30);
+
+window.addEventListener(
+  'load',
+  () => {
+    schedulePinnedPanelsRebuild(0);
+  },
+  { once: true }
+);
+
+window.addEventListener('resize', () => {
+  if (!hasScrollTrigger) return;
+  window.clearTimeout(pinnedPanelResizeTimer);
+  pinnedPanelResizeTimer = window.setTimeout(() => {
+    schedulePinnedPanelsRebuild(0);
+  }, 140);
+});
 
 const gsapAnimationsReady = initGsapAnimations();
 

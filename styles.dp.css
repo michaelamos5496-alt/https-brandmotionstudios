@@ -597,6 +597,7 @@ main > .portfolio {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.55fr);
   gap: clamp(0.8rem, 1.6vw, 1.2rem);
+  will-change: transform;
 }
 
 .work-item.page-hidden {
@@ -884,12 +885,13 @@ main > .portfolio {
   align-items: stretch;
   gap: clamp(0.7rem, 1.1vw, 1rem);
   padding: clamp(0.7rem, 1.1vw, 1rem);
+  will-change: transform;
 }
 
 .bts-page-card {
   margin: 0;
   flex: 0 0 clamp(220px, 24vw, 420px);
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 16 / 10;
   border-radius: 14px;
   border: 1px solid var(--line);
   overflow: hidden;
@@ -899,8 +901,10 @@ main > .portfolio {
 .bts-page-card img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   display: block;
+  background: var(--surface-2);
 }
 
 .bts-page-cta {
@@ -1205,6 +1209,11 @@ body.page-transitioning {
 
 .work-item.is-active .work-media {
   border-color: var(--active-border);
+}
+
+.work-item.is-pinned .work-media,
+.work-item.is-pinned .work-meta {
+  border-color: var(--accent);
 }
 
 @keyframes heroDrift {
