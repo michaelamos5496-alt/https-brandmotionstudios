@@ -302,8 +302,8 @@ function initPinnedPanelsWithOverscroll() {
       }
     });
 
-    if (media) tl.to(media, { yPercent: -5.5, scale: 1.02 }, 0);
-    if (meta) tl.to(meta, { yPercent: 4.5 }, 0);
+    if (media) tl.to(media, { yPercent: -2.5 }, 0);
+    if (meta) tl.to(meta, { yPercent: 2.5 }, 0);
 
     if (tl.scrollTrigger) {
       pinnedPanelTriggers.push(tl.scrollTrigger);

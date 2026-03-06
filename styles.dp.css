@@ -8,6 +8,7 @@
   --focus-ring: 0 0 0 3px rgba(198, 167, 94, 0.28);
   --toggle-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
   --menu-backdrop: rgba(0, 0, 0, 0.3);
+  --work-panel-height: clamp(520px, 76vh, 860px);
 }
 
 html[data-theme="dark"] {
@@ -593,7 +594,7 @@ main > .portfolio {
 .work-item {
   width: min(100%, 1800px);
   margin: 0 auto clamp(1rem, 2.5vw, 1.8rem);
-  min-height: 84vh;
+  min-height: var(--work-panel-height);
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.55fr);
   gap: clamp(0.8rem, 1.6vw, 1.2rem);
@@ -615,7 +616,7 @@ main > .portfolio {
 
 .work-media {
   position: relative;
-  min-height: 84vh;
+  min-height: var(--work-panel-height);
 }
 
 .media-still,
@@ -697,6 +698,7 @@ main > .portfolio {
   padding: clamp(0.95rem, 1.8vw, 1.25rem);
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
 }
 
 .meta-top {
@@ -727,7 +729,8 @@ main > .portfolio {
 }
 
 .control-row {
-  margin-top: 1rem;
+  margin-top: auto;
+  padding-top: 1rem;
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
