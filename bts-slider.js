@@ -26,35 +26,46 @@
   function singleSetWidthPx() {
     const cards = Array.from(track.children);
     const oneSetCount = seedCards.length;
+    const firstCard = cards[0];
+    const firstDuplicateCard = cards[oneSetCount];
+    if (!firstCard || !firstDuplicateCard) return 0;
+
+    // Exact loop distance from set A start to set B start (includes real gap).
+    const distance = firstDuplicateCard.offsetLeft - firstCard.offsetLeft;
+    if (distance > 0) return distance;
+
+    // Fallback measurement.
     const gap = cardGapPx();
     let width = 0;
-
     for (let i = 0; i < oneSetCount; i += 1) {
       const card = cards[i];
       if (!card) continue;
       width += card.getBoundingClientRect().width;
       if (i < oneSetCount - 1) width += gap;
     }
-
-    return width;
+    return width + gap;
   }
 
   function buildLoop() {
     buildTrackCards();
     if (loopTween) loopTween.kill();
 
+    window.gsap.set(track, { x: 0 });
     const distance = singleSetWidthPx();
     if (!distance) return;
 
     const speed = Number(slider.getAttribute("data-bts-speed")) || 60;
     const duration = Math.max(14, distance / speed);
+    const wrapX = window.gsap.utils.wrap(-distance, 0);
 
-    window.gsap.set(track, { x: 0 });
     loopTween = window.gsap.to(track, {
-      x: -distance,
+      x: `-=${distance}`,
       duration,
       ease: "none",
-      repeat: -1
+      repeat: -1,
+      modifiers: {
+        x: (value) => `${wrapX(Number.parseFloat(value) || 0)}px`
+      }
     });
 
     if (prefersReducedMotion.matches) {
@@ -92,6 +103,7 @@
   slider.addEventListener("focusin", () => setPaused(true));
   slider.addEventListener("focusout", () => setPaused(false));
   window.addEventListener("resize", rebuildOnResize);
+  window.addEventListener("load", buildLoop);
 
   if (typeof prefersReducedMotion.addEventListener === "function") {
     prefersReducedMotion.addEventListener("change", () => {
@@ -101,6 +113,10 @@
       }
       setPaused(false);
     });
+  }
+
+  if (document.fonts && typeof document.fonts.ready?.then === "function") {
+    document.fonts.ready.then(buildLoop).catch(() => {});
   }
 
   buildLoop();
