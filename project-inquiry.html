@@ -8,6 +8,7 @@
       name="description"
       content="Project inquiry form for BrandMotion Studios cinematography and visual storytelling services."
     />
+    <meta name="theme-color" content="#0A0A0A" />
     <link rel="canonical" href="https://www.brandmotionstudios.com/project-inquiry.html" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,7 +18,26 @@
     />
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
     <link rel="apple-touch-icon" href="assets/favicon.svg" />
-    <link rel="stylesheet" href="styles.dp.css" />
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const storageKey = "bms-theme";
+        let storedTheme = null;
+        try {
+          storedTheme = localStorage.getItem(storageKey);
+        } catch {}
+        const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const initialTheme =
+          storedTheme === "light" || storedTheme === "dark"
+            ? storedTheme
+            : systemDark
+              ? "dark"
+              : "light";
+        root.setAttribute("data-theme", initialTheme);
+        root.style.colorScheme = initialTheme;
+      })();
+    </script>
+    <link rel="stylesheet" href="styles.dp.css?v=20260306a" />
   </head>
   <body>
     <header class="topbar">
@@ -27,7 +47,73 @@
         <a href="index.html#about">About</a>
         <a href="index.html#contact">Contact</a>
       </nav>
+      <div class="topbar-actions">
+        <button
+          class="theme-toggle theme-toggle-desktop"
+          type="button"
+          data-theme-toggle
+          aria-label="Switch to light theme"
+          aria-pressed="false"
+        >
+          <span class="theme-toggle-track" aria-hidden="true">
+            <span class="theme-toggle-thumb">
+              <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" focusable="false">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path
+                  d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+                ></path>
+              </svg>
+              <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" focusable="false">
+                <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"></path>
+              </svg>
+            </span>
+          </span>
+          <span class="sr-only">Toggle theme</span>
+        </button>
+        <button
+          class="menu-toggle"
+          id="menuToggle"
+          type="button"
+          aria-label="Open mobile menu"
+          aria-controls="mobileMenu"
+          aria-expanded="false"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </header>
+    <div class="mobile-menu-backdrop" id="mobileMenuBackdrop" hidden></div>
+    <aside class="mobile-menu" id="mobileMenu" hidden>
+      <nav class="mobile-menu-links" aria-label="Mobile primary">
+        <a href="index.html#portfolio">Portfolio</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <button
+        class="theme-toggle theme-toggle-mobile"
+        type="button"
+        data-theme-toggle
+        aria-label="Switch to light theme"
+        aria-pressed="false"
+      >
+        <span class="theme-toggle-track" aria-hidden="true">
+          <span class="theme-toggle-thumb">
+            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" focusable="false">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+              ></path>
+            </svg>
+            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" focusable="false">
+              <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"></path>
+            </svg>
+          </span>
+        </span>
+        <span class="sr-only">Toggle theme</span>
+      </button>
+    </aside>
 
     <main id="project-inquiry-page">
       <section id="inquiry" class="inquiry section-reveal visible">
@@ -116,6 +202,6 @@
       <a href="index.html#home">Back to home</a>
     </footer>
 
-    <script src="script.js?v=20260305e"></script>
+    <script src="script.js?v=20260306a"></script>
   </body>
 </html>
