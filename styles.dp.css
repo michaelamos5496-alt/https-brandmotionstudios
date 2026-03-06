@@ -728,6 +728,39 @@ main > .portfolio {
   cursor: pointer;
 }
 
+/* GSAP morph page transition */
+.page-morph-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+.page-morph-blob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24vmax;
+  height: 24vmax;
+  transform: translate(-50%, -50%) scale(0);
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(198, 167, 94, 0.92),
+    rgba(27, 36, 64, 0.96) 58%,
+    rgba(6, 7, 11, 0.99) 100%
+  );
+  border-radius: 56% 44% 47% 53% / 43% 57% 45% 55%;
+  box-shadow: 0 0 140px rgba(0, 0, 0, 0.45);
+  will-change: transform, border-radius, opacity;
+}
+
+body.page-transitioning {
+  overflow: hidden;
+}
+
 /* Motion hooks used by script */
 .section-reveal {
   opacity: 0;

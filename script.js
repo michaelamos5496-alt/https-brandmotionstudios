@@ -15,6 +15,8 @@ const playerOverlay = document.getElementById('playerOverlay');
 const playerFrame = document.getElementById('playerFrame');
 const playerVideo = document.getElementById('playerVideo');
 const playerCloseBtn = document.getElementById('playerCloseBtn');
+const pageMorphTransition = document.getElementById('pageMorphTransition');
+const pageMorphBlob = document.getElementById('pageMorphBlob');
 const inquiryForm = document.querySelector('form.inquiry-form');
 const whatsappLink = document.querySelector('a[href^="https://wa.me/"]');
 const countrySelect = document.getElementById('countrySelect');
@@ -31,6 +33,7 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 const hasGsap = typeof window.gsap !== 'undefined';
 const hasScrollTrigger = hasGsap && typeof window.ScrollTrigger !== 'undefined';
 let currentPage = 0;
+let isMorphTransitionRunning = false;
 
 function trackEvent(name, params = {}) {
   if (!name) return;
@@ -105,6 +108,137 @@ function initGsapAnimations() {
   });
 
   return true;
+}
+
+function randomMorphRadius() {
+  const part = () => Math.round(35 + Math.random() * 30);
+  return `${part()}% ${part()}% ${part()}% ${part()}% / ${part()}% ${part()}% ${part()}% ${part()}%`;
+}
+
+function resolveHashTarget(hash) {
+  if (!hash || hash === '#') return null;
+  try {
+    return document.querySelector(hash);
+  } catch {
+    return null;
+  }
+}
+
+function updateHashWithoutJump(hash) {
+  if (!hash || hash === '#') return;
+  if (history.pushState) {
+    history.pushState(null, '', hash);
+  } else {
+    location.hash = hash;
+  }
+}
+
+function runMorphTransitionTo(target, hash = '') {
+  if (!target) return;
+
+  const canAnimateMorph =
+    hasGsap && !prefersReducedMotion.matches && pageMorphTransition && pageMorphBlob;
+
+  if (!canAnimateMorph) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    updateHashWithoutJump(hash);
+    return;
+  }
+
+  if (isMorphTransitionRunning) return;
+  isMorphTransitionRunning = true;
+
+  const gsap = window.gsap;
+  document.body.classList.add('page-transitioning');
+
+  gsap.killTweensOf(pageMorphBlob);
+  gsap.set(pageMorphTransition, { autoAlpha: 1, visibility: 'visible' });
+  gsap.set(pageMorphBlob, {
+    left: '50%',
+    top: '50%',
+    xPercent: -50,
+    yPercent: -50,
+    scale: 0,
+    rotation: 0,
+    autoAlpha: 1,
+    borderRadius: randomMorphRadius()
+  });
+
+  const morphTl = gsap.timeline({
+    defaults: { ease: 'power3.inOut' },
+    onComplete: () => {
+      isMorphTransitionRunning = false;
+      document.body.classList.remove('page-transitioning');
+      gsap.set(pageMorphTransition, { autoAlpha: 0, visibility: 'hidden' });
+    }
+  });
+
+  morphTl
+    .to(pageMorphBlob, {
+      duration: 0.36,
+      scale: 12,
+      rotation: 95,
+      borderRadius: randomMorphRadius()
+    })
+    .add(() => {
+      target.scrollIntoView({ behavior: 'auto', block: 'start' });
+      updateHashWithoutJump(hash);
+    })
+    .to(pageMorphBlob, {
+      duration: 0.42,
+      scale: 0,
+      rotation: 180,
+      autoAlpha: 0,
+      borderRadius: randomMorphRadius()
+    }, '+=0.02');
+}
+
+function initMorphPageTransitions() {
+  const hasAnchors = document.querySelector('a[href^="#"]');
+  if (!hasAnchors) return;
+
+  document.addEventListener('click', (event) => {
+    if (event.defaultPrevented) return;
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    const el = getEventElementTarget(event);
+    if (!el) return;
+
+    const link = el.closest('a[href^="#"]');
+    if (!link) return;
+
+    const hash = link.getAttribute('href');
+    const target = resolveHashTarget(hash);
+    if (!target) return;
+
+    event.preventDefault();
+    runMorphTransitionTo(target, hash);
+  });
+
+  if (hasGsap && !prefersReducedMotion.matches && pageMorphTransition && pageMorphBlob) {
+    const gsap = window.gsap;
+    gsap.set(pageMorphTransition, { autoAlpha: 1, visibility: 'visible' });
+    gsap.set(pageMorphBlob, {
+      left: '50%',
+      top: '50%',
+      xPercent: -50,
+      yPercent: -50,
+      scale: 13,
+      rotation: 0,
+      autoAlpha: 1,
+      borderRadius: randomMorphRadius()
+    });
+    gsap.to(pageMorphBlob, {
+      duration: 0.78,
+      delay: 0.06,
+      scale: 0,
+      rotation: 125,
+      autoAlpha: 0,
+      borderRadius: randomMorphRadius(),
+      ease: 'power4.inOut',
+      onComplete: () => gsap.set(pageMorphTransition, { autoAlpha: 0, visibility: 'hidden' })
+    });
+  }
 }
 
 const countries = [
@@ -783,6 +917,8 @@ window.addEventListener('pageshow', () => {
   }
   window.scrollTo(0, 0);
 });
+
+initMorphPageTransitions();
 
 const gsapAnimationsReady = initGsapAnimations();
 
