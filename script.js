@@ -42,7 +42,7 @@ const hasScrollTrigger = hasGsap && typeof window.ScrollTrigger !== 'undefined';
 const hasObserverPlugin = hasGsap && typeof window.Observer !== 'undefined';
 const hasSplitText = hasGsap && typeof window.SplitText !== 'undefined';
 const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
-const pinPanelsMinWidth = 980;
+const pinPanelsMinWidth = 760;
 let currentPage = 0;
 let isMorphTransitionRunning = false;
 let swipeCooldownUntil = 0;
@@ -324,6 +324,33 @@ function schedulePinnedPanelsRebuild(delay = 0) {
       window.ScrollTrigger.refresh();
     }
   }, delay);
+}
+
+function initBtsImageResilience() {
+  const btsImages = Array.from(document.querySelectorAll('#bts .bts-page-card img'));
+  if (!btsImages.length) return;
+
+  btsImages.forEach((img, index) => {
+    if (!(img instanceof HTMLImageElement)) return;
+
+    if (index < 3) {
+      img.loading = 'eager';
+      img.decoding = 'async';
+      if (index === 0) img.setAttribute('fetchpriority', 'high');
+    }
+
+    const fallbackSrc = img.dataset.fallbackSrc;
+    if (!fallbackSrc) return;
+
+    img.addEventListener('error', () => {
+      if (img.dataset.fallbackAttempted === '1') {
+        img.classList.add('is-bts-broken');
+        return;
+      }
+      img.dataset.fallbackAttempted = '1';
+      img.src = fallbackSrc;
+    });
+  });
 }
 
 function getSwipeSections() {
@@ -1263,6 +1290,7 @@ initMobileMenu();
 initMorphPageTransitions();
 initGsapSwipeSlider();
 initAboutSplitAnimation();
+initBtsImageResilience();
 schedulePinnedPanelsRebuild(30);
 
 window.addEventListener(

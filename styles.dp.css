@@ -907,6 +907,10 @@ main > .portfolio {
   background: var(--surface-2);
 }
 
+.bts-page-card img.is-bts-broken {
+  opacity: 0;
+}
+
 .bts-page-cta {
   margin-top: 1rem;
   display: flex;
