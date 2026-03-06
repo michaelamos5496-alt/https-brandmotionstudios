@@ -33,6 +33,7 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 const hasGsap = typeof window.gsap !== 'undefined';
 const hasScrollTrigger = hasGsap && typeof window.ScrollTrigger !== 'undefined';
 const hasObserverPlugin = hasGsap && typeof window.Observer !== 'undefined';
+const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
 let currentPage = 0;
 let isMorphTransitionRunning = false;
 let swipeCooldownUntil = 0;
@@ -156,6 +157,12 @@ function getSectionHash(section) {
   return '#home';
 }
 
+function scrollToSectionSmooth(section, hash = '') {
+  if (!section) return;
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  updateHashWithoutJump(hash);
+}
+
 function handleSwipeNavigation(delta, observerEvent) {
   if (Date.now() < swipeCooldownUntil) return;
   if (isMorphTransitionRunning || document.body.classList.contains('player-open')) return;
@@ -179,19 +186,19 @@ function handleSwipeNavigation(delta, observerEvent) {
   if (nextIndex === currentIndex) return;
 
   const nextSection = sectionList[nextIndex];
-  swipeCooldownUntil = Date.now() + 900;
-  runMorphTransitionTo(nextSection, getSectionHash(nextSection));
+  swipeCooldownUntil = Date.now() + 700;
+  scrollToSectionSmooth(nextSection, getSectionHash(nextSection));
 }
 
 function initGsapSwipeSlider() {
-  if (!hasObserverPlugin || prefersReducedMotion.matches) return;
+  if (!hasObserverPlugin || prefersReducedMotion.matches || !isCoarsePointer) return;
   const gsap = window.gsap;
   gsap.registerPlugin(window.Observer);
 
   window.Observer.create({
     target: window,
-    type: 'wheel,touch,pointer',
-    tolerance: 18,
+    type: 'touch,pointer',
+    tolerance: 36,
     preventDefault: false,
     onDown: (self) => handleSwipeNavigation(1, self),
     onUp: (self) => handleSwipeNavigation(-1, self)

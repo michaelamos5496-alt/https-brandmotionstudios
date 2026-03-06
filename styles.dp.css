@@ -25,6 +25,10 @@ body {
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background:
     radial-gradient(1300px 700px at 10% -20%, rgba(38, 56, 102, 0.26), transparent 65%),
@@ -778,22 +782,21 @@ body.page-transitioning {
 /* Motion hooks used by script */
 .section-reveal {
   opacity: 0;
-  transform: translateY(24px);
-  filter: blur(4px);
-  transition: opacity 0.65s ease, transform 0.65s ease, filter 0.65s ease;
+  transform: translateY(18px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  will-change: transform, opacity;
 }
 
 .section-reveal.visible {
   opacity: 1;
   transform: translateY(0);
-  filter: blur(0);
 }
 
 .work-item .work-media,
 .work-item .work-meta {
-  transform: translateY(20px);
-  opacity: 0.78;
-  transition: transform 0.62s ease, opacity 0.62s ease, filter 0.62s ease;
+  transform: translateY(12px);
+  opacity: 0.9;
+  transition: transform 0.45s ease, opacity 0.45s ease;
 }
 
 .work-item.in-view .work-media,
