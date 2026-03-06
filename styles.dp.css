@@ -829,6 +829,79 @@ main > .portfolio {
   background: var(--bts-bg);
 }
 
+/* BTS page */
+.bts-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: calc(72px + var(--section-pad)) var(--edge) var(--section-pad);
+  display: grid;
+  align-content: start;
+  gap: clamp(1.2rem, 2.6vw, 2rem);
+}
+
+.bts-page-head,
+.bts-page-slider-wrap {
+  width: min(100%, 1800px);
+  margin: 0 auto;
+}
+
+.bts-page-head {
+  text-align: center;
+}
+
+.bts-page-head h1 {
+  margin: 0.35rem 0 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+  font-size: clamp(1.7rem, 5.4vw, 4.6rem);
+}
+
+.bts-page-head p {
+  margin: 0;
+  color: var(--copy-body);
+  line-height: 1.62;
+}
+
+.bts-page-slider {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.bts-page-track {
+  width: max-content;
+  display: flex;
+  align-items: stretch;
+  gap: clamp(0.7rem, 1.1vw, 1rem);
+  padding: clamp(0.7rem, 1.1vw, 1rem);
+}
+
+.bts-page-card {
+  margin: 0;
+  flex: 0 0 clamp(220px, 24vw, 420px);
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.bts-page-card img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  display: block;
+}
+
+.bts-page-cta {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
 .services-grid,
 .process-grid {
   margin-top: 1.15rem;
@@ -1218,6 +1291,15 @@ body.page-transitioning {
 
   .bts-slide {
     width: 74vw;
+  }
+
+  .bts-page {
+    padding-top: calc(64px + 1.4rem);
+    padding-bottom: 1.8rem;
+  }
+
+  .bts-page-card {
+    flex-basis: clamp(180px, 68vw, 300px);
   }
 
   .work-media {

@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Start A Project | BrandMotion Studios</title>
+    <title>BTS | BrandMotion Studios</title>
     <meta
       name="description"
-      content="Project inquiry form for BrandMotion Studios cinematography and visual storytelling services."
+      content="Behind-the-scenes production moments from BrandMotion Studios in an infinite GSAP card slider."
     />
     <meta name="theme-color" content="#0A0A0A" />
-    <link rel="canonical" href="https://www.brandmotionstudios.com/project-inquiry.html" />
+    <link rel="canonical" href="https://www.brandmotionstudios.com/bts.html" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -117,85 +117,79 @@
       </button>
     </aside>
 
-    <main id="project-inquiry-page">
-      <section id="inquiry" class="inquiry section-reveal visible">
-        <div class="inquiry-head section-top-center">
-          <p class="kicker">Start A Project</p>
-          <h2>Tell us what you need, we will respond with next steps.</h2>
+    <main id="bts-page" class="bts-page">
+      <section class="bts-page-head section-reveal">
+        <p class="kicker">Behind The Scenes</p>
+        <h1>Infinite Production Card Slider</h1>
+        <p>
+          Cinematic moments from set life, camera movement, styling direction, and production flow.
+        </p>
+      </section>
+
+      <section class="bts-page-slider-wrap section-reveal">
+        <div class="bts-page-slider" data-bts-slider data-bts-speed="64">
+          <div class="bts-page-track" data-bts-track>
+            <figure class="bts-page-card">
+              <img
+                src="https://images.pixieset.com/443758701/dbaaa1319f44656b22e2d46608f8a2c2-xxlarge.jpg"
+                alt="Behind the scenes camera setup"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="bts-page-card">
+              <img
+                src="https://images.pixieset.com/443758701/da1f1a97ebe986f1a70476a15413e135-xxlarge.jpg"
+                alt="Crew in preparation on set"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="bts-page-card">
+              <img
+                src="https://images.pixieset.com/443758701/f42eb2e99894a30990a85529b2edc08b-xxlarge.jpg"
+                alt="Production team capturing beach sequence"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="bts-page-card">
+              <img
+                src="https://images.pixieset.com/443758701/01b88df056310d4e7958d2d047bb05c5-xxlarge.jpg"
+                alt="Creative direction during outdoor filming"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="bts-page-card">
+              <img
+                src="https://images.pixieset.com/443758701/a76d64efc01d11cda17c95e37876da88-xxlarge.jpg"
+                alt="Camera operator and assistant on location"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="bts-page-card">
+              <img
+                src="https://images.pixieset.com/443758701/FnSa3tuGX8_t1767909644-9eefd635701016ab79e7aa77d8b9c33f.jpg"
+                alt="Wardrobe and camera prep scene"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="bts-page-card">
+              <img
+                src="https://images.pixieset.com/443758701/53ced2d7f457532be49620791576e6f7-xxlarge.jpg"
+                alt="Steadicam movement on set"
+                loading="lazy"
+              />
+            </figure>
+            <figure class="bts-page-card">
+              <img
+                src="https://images.pixieset.com/443758701/c6834bcff9d3d557540383641a013eaf-xxlarge.jpg"
+                alt="Cinematography monitoring and framing"
+                loading="lazy"
+              />
+            </figure>
+          </div>
         </div>
-        <form
-          class="inquiry-form"
-          name="project-inquiry"
-          method="POST"
-          action="https://formsubmit.co/brandmotionstudios5496@gmail.com"
-        >
-          <input type="hidden" name="_subject" value="New Project Inquiry - BrandMotion Studios" />
-          <input type="hidden" name="_next" value="https://brandmotionstudios.com/thank-you.html" />
-          <input type="hidden" name="_captcha" value="false" />
-          <label>
-            Full Name
-            <input type="text" name="name" required />
-          </label>
-          <label>
-            Email
-            <input type="email" name="email" required />
-          </label>
-          <label>
-            Phone Number
-            <input id="phoneInput" type="tel" name="phone_number" placeholder="+..." required />
-          </label>
-          <label>
-            Project Type
-            <select name="project_type" required>
-              <option value="">Select project type</option>
-              <option>Wedding Film</option>
-              <option>Documentary</option>
-              <option>Fashion Campaign</option>
-              <option>Brand Visuals</option>
-              <option>Architecture / Interior Decor</option>
-              <option>Post-Production</option>
-            </select>
-          </label>
-          <label>
-            How Did You Hear About Us?
-            <select name="referral_source" required>
-              <option value="">Select an option</option>
-              <option>Instagram</option>
-              <option>LinkedIn</option>
-              <option>YouTube</option>
-              <option>Google Search</option>
-              <option>Referral</option>
-              <option>Returning Client</option>
-              <option>Other</option>
-            </select>
-          </label>
-          <label>
-            Country
-            <select id="countrySelect" name="country" required>
-              <option value="">Select country</option>
-            </select>
-          </label>
-          <label>
-            Project Location
-            <select id="projectLocationSelect" name="project_location" required disabled>
-              <option value="">Select country first</option>
-            </select>
-          </label>
-          <label>
-            Preferred Shoot Date
-            <input type="date" name="preferred_shoot_date" required />
-          </label>
-          <label class="full">
-            Project Brief
-            <textarea
-              name="brief"
-              rows="5"
-              placeholder="Share your goals, timeline, location, and deliverables."
-              required
-            ></textarea>
-          </label>
-          <button class="control-btn full" type="submit">Send Inquiry</button>
-        </form>
+        <div class="bts-page-cta">
+          <a class="control-btn" href="index.html#portfolio">Back To Portfolio</a>
+        </div>
       </section>
     </main>
 
@@ -204,6 +198,8 @@
       <a href="index.html#home">Back to home</a>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="script.js?v=20260306a"></script>
+    <script src="bts-slider.js?v=20260306a"></script>
   </body>
 </html>
