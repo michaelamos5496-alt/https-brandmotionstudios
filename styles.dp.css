@@ -792,6 +792,11 @@ body.page-transitioning {
   transform: translateY(0);
 }
 
+.split .char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
 .work-item .work-media,
 .work-item .work-meta {
   transform: translateY(12px);

@@ -33,6 +33,7 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 const hasGsap = typeof window.gsap !== 'undefined';
 const hasScrollTrigger = hasGsap && typeof window.ScrollTrigger !== 'undefined';
 const hasObserverPlugin = hasGsap && typeof window.Observer !== 'undefined';
+const hasSplitText = hasGsap && typeof window.SplitText !== 'undefined';
 const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
 let currentPage = 0;
 let isMorphTransitionRunning = false;
@@ -202,6 +203,36 @@ function initGsapSwipeSlider() {
     preventDefault: false,
     onDown: (self) => handleSwipeNavigation(1, self),
     onUp: (self) => handleSwipeNavigation(-1, self)
+  });
+}
+
+function initAboutSplitAnimation() {
+  if (!hasSplitText || prefersReducedMotion.matches) return;
+  const gsap = window.gsap;
+  const aboutSplitTargets = gsap.utils.toArray('#about .split');
+  if (!aboutSplitTargets.length) return;
+
+  aboutSplitTargets.forEach((target) => {
+    const split = window.SplitText.create(target, { type: 'words, chars' });
+    if (!split || !split.chars || !split.chars.length) return;
+
+    const tweenVars = {
+      duration: 1,
+      y: 100,
+      autoAlpha: 0,
+      stagger: 0.05,
+      ease: 'power3.out'
+    };
+
+    if (hasScrollTrigger) {
+      tweenVars.scrollTrigger = {
+        trigger: target,
+        start: 'top 85%',
+        once: true
+      };
+    }
+
+    gsap.from(split.chars, tweenVars);
   });
 }
 
@@ -1015,6 +1046,7 @@ window.addEventListener('pageshow', () => {
 
 initMorphPageTransitions();
 initGsapSwipeSlider();
+initAboutSplitAnimation();
 
 const gsapAnimationsReady = initGsapAnimations();
 
