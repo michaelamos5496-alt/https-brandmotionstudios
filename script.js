@@ -1195,11 +1195,42 @@ function buildPopupUrlFromPreview(previewUrl) {
 
   // Keep the same video, but ensure popup playback controls are available.
   if (host.includes('youtube.com') || host.includes('youtu.be')) {
-    parsed.searchParams.set('autoplay', '1');
-    parsed.searchParams.set('controls', '1');
-    parsed.searchParams.set('rel', '0');
-    parsed.searchParams.delete('background');
-    return parsed.toString();
+    let videoId = '';
+    const pathParts = parsed.pathname.split('/').filter(Boolean);
+
+    if (host.includes('youtu.be')) {
+      videoId = pathParts[0] || '';
+    } else if (pathParts[0] === 'shorts') {
+      videoId = pathParts[1] || '';
+    } else if (pathParts[0] === 'embed') {
+      videoId = pathParts[1] || '';
+    } else if (pathParts[0] === 'watch') {
+      videoId = parsed.searchParams.get('v') || '';
+    } else {
+      videoId = parsed.searchParams.get('v') || '';
+    }
+
+    if (!videoId) {
+      parsed.searchParams.set('autoplay', '1');
+      parsed.searchParams.set('controls', '1');
+      parsed.searchParams.set('rel', '0');
+      parsed.searchParams.delete('background');
+      return parsed.toString();
+    }
+
+    const isMuted = parsed.searchParams.get('mute') ?? '1';
+    const shouldLoop = parsed.searchParams.get('loop') ?? '1';
+    const embed = new URL(`https://www.youtube.com/embed/${videoId}`);
+    embed.searchParams.set('autoplay', '1');
+    embed.searchParams.set('mute', isMuted);
+    embed.searchParams.set('controls', '1');
+    embed.searchParams.set('rel', '0');
+    embed.searchParams.set('playsinline', '1');
+    embed.searchParams.set('loop', shouldLoop);
+    if (shouldLoop === '1') {
+      embed.searchParams.set('playlist', videoId);
+    }
+    return embed.toString();
   }
 
   if (host.includes('vimeo.com')) {
