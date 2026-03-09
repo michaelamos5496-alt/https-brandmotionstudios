@@ -378,6 +378,7 @@ function initPortraitCardStack() {
   const canAnimate = hasGsap && !prefersReducedMotion.matches;
   let order = [...cards];
   let isAnimating = false;
+  let lastFrontCard = null;
   const detailTargets = [
     portraitDetailIndex,
     portraitDetailTitle,
@@ -410,6 +411,69 @@ function initPortraitCardStack() {
       { autoAlpha: 0, y: 8 },
       { autoAlpha: 1, y: 0, duration: 0.32, stagger: 0.03, ease: 'power2.out' }
     );
+  };
+
+  const normalizeIframePreviewSrc = (rawSrc, { autoplay = '1', cacheBust = false } = {}) => {
+    if (!rawSrc) return rawSrc;
+    try {
+      const parsed = new URL(rawSrc, window.location.origin);
+      parsed.searchParams.delete('_cb');
+      parsed.searchParams.set('autoplay', autoplay);
+      parsed.searchParams.set('mute', parsed.searchParams.get('mute') || '1');
+      parsed.searchParams.set('playsinline', '1');
+      if (cacheBust) {
+        parsed.searchParams.set('_cb', String(Date.now()));
+      }
+      return parsed.toString();
+    } catch {
+      return rawSrc;
+    }
+  };
+
+  const syncPortraitIframeAutoplay = ({ force = false } = {}) => {
+    const activeCard = order[0];
+
+    // Keep non-front iframe previews paused to avoid conflicting autoplay state.
+    order.forEach((card, index) => {
+      const iframe = card.querySelector('iframe');
+      if (!iframe) return;
+
+      const storedSrc = iframe.dataset.previewBaseSrc || iframe.getAttribute('src') || '';
+      if (!storedSrc) return;
+      if (!iframe.dataset.previewBaseSrc) {
+        iframe.dataset.previewBaseSrc = normalizeIframePreviewSrc(storedSrc, { autoplay: '1' });
+      }
+
+      if (index !== 0) {
+        const pausedSrc = normalizeIframePreviewSrc(iframe.dataset.previewBaseSrc, { autoplay: '0' });
+        if (pausedSrc && iframe.src !== pausedSrc) {
+          iframe.src = pausedSrc;
+        }
+      }
+    });
+
+    if (!activeCard) return;
+    if (!force && activeCard === lastFrontCard) return;
+
+    const activeIframe = activeCard.querySelector('iframe');
+    if (activeIframe) {
+      const storedSrc = activeIframe.dataset.previewBaseSrc || activeIframe.getAttribute('src') || '';
+      if (storedSrc) {
+        if (!activeIframe.dataset.previewBaseSrc) {
+          activeIframe.dataset.previewBaseSrc = normalizeIframePreviewSrc(storedSrc, { autoplay: '1' });
+        }
+        const activeSrc = normalizeIframePreviewSrc(activeIframe.dataset.previewBaseSrc, {
+          autoplay: '1',
+          cacheBust: true
+        });
+        activeIframe.src = 'about:blank';
+        requestAnimationFrame(() => {
+          activeIframe.src = activeSrc;
+        });
+      }
+    }
+
+    lastFrontCard = activeCard;
   };
 
   const renderStack = ({ immediate = false } = {}) => {
@@ -456,6 +520,7 @@ function initPortraitCardStack() {
     });
     syncPlayA11y();
     syncFrontCardDetails({ immediate });
+    syncPortraitIframeAutoplay({ force: immediate });
   };
 
   const moveTopToBack = () => {
