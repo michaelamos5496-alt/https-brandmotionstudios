@@ -746,6 +746,7 @@ main > .portfolio {
 }
 
 /* BTS + Services + Process + Inquiry */
+.portrait-works,
 .bts,
 .services,
 .process,
@@ -757,10 +758,12 @@ main > .portfolio {
   border-bottom: 1px solid var(--line);
 }
 
+.portrait-head,
 .bts-head,
 .services-head,
 .process-head,
 .inquiry-head,
+.portrait-shell,
 .services-grid,
 .process-grid,
 .inquiry-form,
@@ -770,6 +773,7 @@ main > .portfolio {
   margin: 0 auto;
 }
 
+.portrait-head h2,
 .bts-head h2,
 .services-head h2,
 .process h2,
@@ -781,6 +785,7 @@ main > .portfolio {
   font-size: clamp(1.6rem, 4.8vw, 4rem);
 }
 
+.portrait-head p,
 .bts-head p,
 .services-head p,
 .process-head p,
@@ -791,6 +796,23 @@ main > .portfolio {
   color: var(--copy-soft);
   line-height: 1.62;
   text-align: left;
+}
+
+.portrait-shell {
+  margin-top: 1.1rem;
+  width: min(100%, 640px);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.portrait-shell .codepen {
+  margin: 0 !important;
+  border: 0 !important;
+  padding: 0 !important;
+  min-height: clamp(560px, 78vh, 840px);
 }
 
 .bts-strip {
@@ -1304,6 +1326,14 @@ body.page-transitioning {
 
   .featured-media {
     min-height: 64vh;
+  }
+
+  .portrait-shell {
+    width: 100%;
+  }
+
+  .portrait-shell .codepen {
+    min-height: clamp(460px, 72vh, 640px);
   }
 
   .services-grid,
