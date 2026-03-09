@@ -421,6 +421,11 @@ function initPortraitCardStack() {
       parsed.searchParams.set('autoplay', autoplay);
       parsed.searchParams.set('mute', parsed.searchParams.get('mute') || '1');
       parsed.searchParams.set('playsinline', '1');
+      const host = parsed.hostname.toLowerCase();
+      if (host.includes('youtube.com') || host.includes('youtube-nocookie.com') || host.includes('youtu.be')) {
+        parsed.searchParams.set('enablejsapi', '1');
+        parsed.searchParams.set('origin', window.location.origin);
+      }
       if (cacheBust) {
         parsed.searchParams.set('_cb', String(Date.now()));
       }
@@ -428,6 +433,28 @@ function initPortraitCardStack() {
     } catch {
       return rawSrc;
     }
+  };
+
+  const triggerYoutubePreviewPlayback = (iframe) => {
+    if (!iframe || !iframe.contentWindow) return;
+    let targetOrigin = '*';
+    try {
+      const parsed = new URL(iframe.src, window.location.origin);
+      targetOrigin = `${parsed.protocol}//${parsed.host}`;
+    } catch {}
+
+    const postCommand = (func, args = []) => {
+      try {
+        iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args }), targetOrigin);
+      } catch {}
+    };
+
+    [40, 180, 420, 900].forEach((delay) => {
+      window.setTimeout(() => {
+        postCommand('mute');
+        postCommand('playVideo');
+      }, delay);
+    });
   };
 
   const syncPortraitIframeAutoplay = ({ force = false } = {}) => {
@@ -466,6 +493,13 @@ function initPortraitCardStack() {
           autoplay: '1',
           cacheBust: true
         });
+        activeIframe.addEventListener(
+          'load',
+          () => {
+            triggerYoutubePreviewPlayback(activeIframe);
+          },
+          { once: true }
+        );
         activeIframe.src = 'about:blank';
         requestAnimationFrame(() => {
           activeIframe.src = activeSrc;
