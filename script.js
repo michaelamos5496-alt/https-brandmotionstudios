@@ -413,24 +413,29 @@ function initPortraitCardStack() {
   };
 
   const renderStack = ({ immediate = false } = {}) => {
-    let stageShift = 0;
-    if (window.innerWidth > 980) {
-      const detailPanel = stage.querySelector('.portrait-detail');
-      const leadCard = order[0];
-      const detailRight = detailPanel ? detailPanel.offsetLeft + detailPanel.offsetWidth : 0;
-      const cardWidth = leadCard ? leadCard.offsetWidth : 280;
-      const desiredLeftEdge = detailRight + 28;
-      const requiredShift = desiredLeftEdge + cardWidth / 2 - stage.clientWidth / 2;
-      stageShift = Math.max(requiredShift, 42);
-    }
     const spreadX = window.innerWidth <= 980 ? 20 : 24;
     const spreadY = window.innerWidth <= 980 ? 11 : 13;
+    const visibleCount = Math.min(5, order.length);
+    const stackSpanX = spreadX * Math.max(0, visibleCount - 1);
+    const detailPanel = stage.querySelector('.portrait-detail');
+    const detailIsOverlay =
+      detailPanel && window.getComputedStyle(detailPanel).position === 'absolute';
+
+    const innerPad = 18;
+    const zoneLeft = detailIsOverlay
+      ? detailPanel.offsetLeft + detailPanel.offsetWidth + 26
+      : innerPad;
+    const zoneRight = stage.clientWidth - innerPad;
+    const zoneCenter = (zoneLeft + zoneRight) / 2;
+    const targetCenterOffset = zoneCenter - stage.clientWidth / 2;
+    const baseShift = targetCenterOffset - stackSpanX / 2;
+
     order.forEach((card, index) => {
       const visible = index < 5;
       const vars = {
         xPercent: -50,
         yPercent: -50,
-        x: stageShift + index * spreadX,
+        x: baseShift + index * spreadX,
         y: index * spreadY,
         rotate: index * 1.35,
         scale: 1 - index * 0.045,
