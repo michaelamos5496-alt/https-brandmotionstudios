@@ -1131,7 +1131,6 @@ main > .portfolio {
 
 .gallery .cards li {
   flex: 0 0 clamp(175px, 20vw, 270px);
-  min-height: 260px;
   aspect-ratio: 9 / 16;
   border-radius: 18px;
   border: 1px solid var(--border-mid);
@@ -1428,18 +1427,13 @@ body.page-transitioning {
 
 /* Motion hooks used by script */
 .section-reveal {
-  opacity: 1;
-  transform: translateY(0);
+  opacity: 0;
+  transform: translateY(18px);
   transition: opacity 0.5s ease, transform 0.5s ease;
   will-change: transform, opacity;
 }
 
-html.motion-ready .section-reveal {
-  opacity: 0;
-  transform: translateY(18px);
-}
-
-html.motion-ready .section-reveal.visible {
+.section-reveal.visible {
   opacity: 1;
   transform: translateY(0);
 }

@@ -59,7 +59,6 @@ let pinnedPanelTriggers = [];
 let pinnedPanelResizeTimer = 0;
 let pinnedPanelRefreshTimer = 0;
 const themeStorageKey = 'bms-theme';
-const htmlRoot = document.documentElement;
 
 function trackEvent(name, params = {}) {
   if (!name) return;
@@ -1661,19 +1660,9 @@ window.addEventListener('resize', () => {
   }, 140);
 });
 
-if (hasGsap && !prefersReducedMotion.matches) {
-  htmlRoot.classList.add('motion-ready');
-  sections.forEach((section) => section.classList.remove('visible'));
-} else {
-  htmlRoot.classList.remove('motion-ready');
-  sections.forEach((section) => section.classList.add('visible'));
-}
-
 const gsapAnimationsReady = initGsapAnimations();
 
 if (!gsapAnimationsReady) {
-  htmlRoot.classList.remove('motion-ready');
-  sections.forEach((section) => section.classList.add('visible'));
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
