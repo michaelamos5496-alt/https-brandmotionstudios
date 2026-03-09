@@ -907,11 +907,18 @@ main > .portfolio {
   border-color: var(--accent);
 }
 
-.portrait-card img {
+.portrait-card img,
+.portrait-card iframe,
+.portrait-card video {
   width: 100%;
   height: 100%;
   display: block;
+  border: 0;
   object-fit: cover;
+}
+
+.portrait-card iframe {
+  pointer-events: none;
 }
 
 .portrait-card::after {

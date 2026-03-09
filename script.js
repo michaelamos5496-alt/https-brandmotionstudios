@@ -1221,30 +1221,34 @@ function buildPopupUrlFromPreview(previewUrl) {
       videoId = parsed.searchParams.get('v') || '';
     }
 
-    if (!videoId) {
-      parsed.searchParams.set('autoplay', '1');
-      parsed.searchParams.set('controls', '1');
-      parsed.searchParams.set('rel', '0');
-      parsed.searchParams.delete('background');
-      return parsed.toString();
+    // Normalize non-embed YouTube URLs (watch/shorts/youtu.be) into embed URLs.
+    if (videoId && pathParts[0] !== 'embed') {
+      const embed = new URL(`https://www.youtube.com/embed/${videoId}`);
+      parsed.searchParams.forEach((value, key) => {
+        if (key === 'v' || key === 'si') return;
+        embed.searchParams.set(key, value);
+      });
+      parsed = embed;
     }
 
-    const isMuted = parsed.searchParams.get('mute') ?? '1';
-    const shouldLoop = parsed.searchParams.get('loop') ?? '1';
-    const embed = new URL(`https://www.youtube-nocookie.com/embed/${videoId}`);
-    embed.searchParams.set('autoplay', '1');
-    embed.searchParams.set('mute', isMuted);
-    embed.searchParams.set('controls', '1');
-    embed.searchParams.set('rel', '0');
-    embed.searchParams.set('playsinline', '1');
-    embed.searchParams.set('modestbranding', '1');
-    embed.searchParams.set('iv_load_policy', '3');
-    embed.searchParams.set('origin', window.location.origin);
-    embed.searchParams.set('loop', shouldLoop);
-    if (shouldLoop === '1') {
-      embed.searchParams.set('playlist', videoId);
+    if (!videoId && parsed.pathname.includes('/embed/')) {
+      videoId = pathParts[pathParts.indexOf('embed') + 1] || '';
     }
-    return embed.toString();
+
+    parsed.searchParams.set('autoplay', '1');
+    parsed.searchParams.set('controls', '1');
+    parsed.searchParams.set('rel', '0');
+    parsed.searchParams.set('playsinline', '1');
+    parsed.searchParams.set('mute', parsed.searchParams.get('mute') || '1');
+
+    const shouldLoop = parsed.searchParams.get('loop') || '1';
+    parsed.searchParams.set('loop', shouldLoop);
+    if (shouldLoop === '1' && videoId) {
+      parsed.searchParams.set('playlist', parsed.searchParams.get('playlist') || videoId);
+    }
+
+    parsed.searchParams.delete('background');
+    return parsed.toString();
   }
 
   if (host.includes('vimeo.com')) {
