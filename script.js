@@ -519,9 +519,14 @@ function initPortraitCardStack() {
     const detailPanel = stage.querySelector('.portrait-detail');
     const detailIsOverlay =
       detailPanel && window.getComputedStyle(detailPanel).position === 'absolute';
+    const detailActsAsSidePanel =
+      Boolean(detailPanel) &&
+      detailIsOverlay &&
+      detailPanel.offsetWidth <= stage.clientWidth * 0.52 &&
+      detailPanel.offsetHeight >= stage.clientHeight * 0.45;
 
     const innerPad = 18;
-    const zoneLeft = detailIsOverlay
+    const zoneLeft = detailActsAsSidePanel
       ? detailPanel.offsetLeft + detailPanel.offsetWidth + 26
       : innerPad;
     const zoneRight = stage.clientWidth - innerPad;
