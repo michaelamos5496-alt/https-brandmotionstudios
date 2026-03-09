@@ -369,6 +369,7 @@ function initBtsImageResilience() {
 
 function initPortraitCardStack() {
   if (!portraitStack) return;
+  const portraitSection = document.getElementById('portrait-works');
   const stage = portraitStack.querySelector('.portrait-stage');
   if (!stage) return;
 
@@ -440,18 +441,21 @@ function initPortraitCardStack() {
     if (!card) return null;
     let iframe = card.querySelector('iframe');
     const placeholderImg = card.querySelector('img');
-    const previewUrl =
+    const iframeSrc = iframe ? iframe.getAttribute('src') || '' : '';
+    const previewUrlRaw =
       card.dataset.previewUrl ||
-      (iframe ? iframe.getAttribute('src') : '') ||
+      (iframeSrc && !iframeSrc.startsWith('about:blank') ? iframeSrc : '') ||
       card.dataset.playUrl ||
       '';
+    const previewUrl = previewUrlRaw;
     if (!previewUrl) return iframe || null;
 
     if (!iframe) {
       iframe = document.createElement('iframe');
       iframe.title = card.dataset.title || 'Portrait preview';
-      iframe.loading = 'lazy';
-      iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+      iframe.loading = 'eager';
+      iframe.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media';
+      iframe.setAttribute('allowfullscreen', '');
       iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
       const meta = card.querySelector('.portrait-card-meta');
       if (meta) {
@@ -478,11 +482,19 @@ function initPortraitCardStack() {
     const placeholderImg = card.querySelector('img');
     if (!iframe) return;
 
-    iframe.src = 'about:blank';
     if (card.dataset.previewLazy === '1') {
+      iframe.src = 'about:blank';
       iframe.remove();
       if (placeholderImg) {
         placeholderImg.style.display = '';
+      }
+      return;
+    }
+
+    if (iframe.dataset.previewBaseSrc) {
+      const pausedSrc = normalizeIframePreviewSrc(iframe.dataset.previewBaseSrc, { autoplay: '0' });
+      if (pausedSrc && iframe.src !== pausedSrc) {
+        iframe.src = pausedSrc;
       }
     }
   };
@@ -516,18 +528,6 @@ function initPortraitCardStack() {
     order.forEach((card, index) => {
       if (index !== 0) {
         const iframe = card.querySelector('iframe');
-        if (iframe) {
-          const storedSrc = iframe.dataset.previewBaseSrc || iframe.getAttribute('src') || '';
-          if (storedSrc && !iframe.dataset.previewBaseSrc) {
-            iframe.dataset.previewBaseSrc = normalizeIframePreviewSrc(storedSrc, { autoplay: '1' });
-          }
-          if (iframe.dataset.previewBaseSrc) {
-            const pausedSrc = normalizeIframePreviewSrc(iframe.dataset.previewBaseSrc, { autoplay: '0' });
-            if (pausedSrc && iframe.src !== pausedSrc) {
-              iframe.src = pausedSrc;
-            }
-          }
-        }
         releasePortraitPreviewIframe(card);
       }
     });
@@ -537,6 +537,7 @@ function initPortraitCardStack() {
 
     const activeIframe = ensurePortraitPreviewIframe(activeCard);
     if (activeIframe) {
+      activeIframe.loading = 'eager';
       const storedSrc = activeIframe.dataset.previewBaseSrc || activeIframe.getAttribute('src') || '';
       if (storedSrc) {
         if (!activeIframe.dataset.previewBaseSrc) {
@@ -546,17 +547,18 @@ function initPortraitCardStack() {
           autoplay: '1',
           cacheBust: true
         });
-        activeIframe.addEventListener(
-          'load',
-          () => {
-            triggerYoutubePreviewPlayback(activeIframe);
-          },
-          { once: true }
-        );
-        activeIframe.src = 'about:blank';
-        requestAnimationFrame(() => {
+        if (activeSrc && activeIframe.src !== activeSrc) {
+          activeIframe.addEventListener(
+            'load',
+            () => {
+              triggerYoutubePreviewPlayback(activeIframe);
+            },
+            { once: true }
+          );
           activeIframe.src = activeSrc;
-        });
+        } else {
+          triggerYoutubePreviewPlayback(activeIframe);
+        }
       }
     }
 
@@ -587,27 +589,42 @@ function initPortraitCardStack() {
     const targetCenterOffset = zoneCenter - stage.clientWidth / 2;
     const baseShift = targetCenterOffset - stackSpanX / 2;
     let mobileTopShift = 0;
+    let mobileScaleCompensation = 1;
 
     if (isMobilePortraitLayout) {
       const activeCard = order[0];
-      const cardHeight = activeCard?.offsetHeight || Math.min(390, stage.clientHeight * 0.58);
+      const cardHeightRaw = activeCard?.offsetHeight || Math.min(390, stage.clientHeight * 0.58);
       const panelBottom = detailPanel ? detailPanel.offsetTop + detailPanel.offsetHeight : 0;
       const minTop = panelBottom + 18;
+      const maxBottom = stage.clientHeight - innerPad;
+      const availableHeight = Math.max(180, maxBottom - minTop);
+      const stackDepthOffset = spreadY * Math.max(0, visibleCount - 1);
+      const usableFrontHeight = Math.max(180, availableHeight - stackDepthOffset - 8);
+
+      if (cardHeightRaw > usableFrontHeight) {
+        mobileScaleCompensation = Math.max(0.62, usableFrontHeight / cardHeightRaw);
+      }
+
+      const cardHeight = cardHeightRaw * mobileScaleCompensation;
       const centerY = stage.clientHeight / 2;
       const requiredShift = minTop + cardHeight / 2 - centerY;
-      const maxShift = Math.max(0, stage.clientHeight - cardHeight * 0.52 - centerY);
+      const maxShift = Math.max(0, maxBottom - cardHeight / 2 - centerY);
       mobileTopShift = Math.max(0, Math.min(maxShift, requiredShift));
     }
 
     order.forEach((card, index) => {
       const visible = index < 5;
+      const baseScale = Math.max(0.48, 1 - index * 0.045);
+      const appliedScale = isMobilePortraitLayout
+        ? Math.max(0.48, baseScale * mobileScaleCompensation)
+        : baseScale;
       const vars = {
         xPercent: -50,
         yPercent: -50,
         x: baseShift + index * spreadX,
         y: mobileTopShift + index * spreadY,
         rotate: index * 1.35,
-        scale: 1 - index * 0.045,
+        scale: appliedScale,
         zIndex: order.length - index,
         autoAlpha: visible ? 1 : 0,
         duration: immediate ? 0 : 0.45,
@@ -626,6 +643,12 @@ function initPortraitCardStack() {
     syncPlayA11y();
     syncFrontCardDetails({ immediate });
     syncPortraitIframeAutoplay({ force: immediate });
+
+    const nextCardThumbnail = order[1]?.querySelector('img[loading="lazy"]');
+    if (nextCardThumbnail instanceof HTMLImageElement) {
+      nextCardThumbnail.loading = 'eager';
+      nextCardThumbnail.decoding = 'async';
+    }
   };
 
   const moveTopToBack = () => {
@@ -702,6 +725,20 @@ function initPortraitCardStack() {
   window.addEventListener('resize', () => {
     renderStack({ immediate: true });
   });
+
+  if ('IntersectionObserver' in window && portraitSection) {
+    const portraitVisibilityObserver = new IntersectionObserver(
+      (entries) => {
+        const isVisible = entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.35);
+        if (!isVisible) return;
+        syncPortraitIframeAutoplay({ force: true });
+      },
+      {
+        threshold: [0.15, 0.35, 0.65]
+      }
+    );
+    portraitVisibilityObserver.observe(portraitSection);
+  }
 
   renderStack({ immediate: true });
 }
