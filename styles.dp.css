@@ -825,6 +825,69 @@ main > .portfolio {
   overflow: hidden;
 }
 
+.portrait-detail {
+  position: absolute;
+  left: 0.75rem;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  width: min(30%, 280px);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(198, 167, 94, 0.08), rgba(10, 10, 10, 0.04));
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  z-index: 1;
+}
+
+.portrait-detail-kicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.62rem;
+  color: var(--muted);
+}
+
+.portrait-detail-index {
+  margin: 0.1rem 0 0;
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  line-height: 1;
+  font-weight: 800;
+}
+
+.portrait-detail-title {
+  margin: 0.2rem 0 0;
+  text-transform: uppercase;
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  font-size: clamp(0.95rem, 1.7vw, 1.35rem);
+}
+
+.portrait-detail-type {
+  margin: 0.2rem 0 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.65rem;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+
+.portrait-detail-type strong {
+  color: var(--accent);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.portrait-detail-description {
+  margin: 0.35rem 0 0;
+  color: var(--copy-body);
+  line-height: 1.55;
+  font-size: 0.86rem;
+}
+
 .portrait-card {
   position: absolute;
   left: 50%;
@@ -888,7 +951,7 @@ main > .portfolio {
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .bts-strip {
@@ -1412,8 +1475,22 @@ body.page-transitioning {
     min-height: clamp(430px, 62vh, 620px);
   }
 
+  .portrait-detail {
+    position: relative;
+    left: auto;
+    top: auto;
+    bottom: auto;
+    width: auto;
+    margin: 0.75rem 0.75rem 0;
+    border-radius: 14px;
+  }
+
   .portrait-card {
     width: clamp(170px, 54vw, 250px);
+  }
+
+  .portrait-controls {
+    justify-content: center;
   }
 
   .services-grid,

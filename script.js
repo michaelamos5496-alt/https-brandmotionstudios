@@ -33,6 +33,10 @@ const portraitStack = document.getElementById('portraitStack');
 const portraitPrevBtn = document.getElementById('portraitPrevBtn');
 const portraitNextBtn = document.getElementById('portraitNextBtn');
 const portraitPlayBtn = document.getElementById('portraitPlayBtn');
+const portraitDetailIndex = document.getElementById('portraitDetailIndex');
+const portraitDetailTitle = document.getElementById('portraitDetailTitle');
+const portraitDetailType = document.getElementById('portraitDetailType');
+const portraitDetailDescription = document.getElementById('portraitDetailDescription');
 const localPreviewVideos = Array.from(
   document.querySelectorAll(
     '#project-03 .media-still video, #project-04 .media-still video, #project-05 .media-still video, #project-06 .media-still video'
@@ -374,6 +378,12 @@ function initPortraitCardStack() {
   const canAnimate = hasGsap && !prefersReducedMotion.matches;
   let order = [...cards];
   let isAnimating = false;
+  const detailTargets = [
+    portraitDetailIndex,
+    portraitDetailTitle,
+    portraitDetailType,
+    portraitDetailDescription
+  ].filter(Boolean);
 
   const syncPlayA11y = () => {
     if (!portraitPlayBtn) return;
@@ -381,14 +391,38 @@ function initPortraitCardStack() {
     portraitPlayBtn.setAttribute('aria-label', `Play ${title}`);
   };
 
+  const syncFrontCardDetails = ({ immediate = false } = {}) => {
+    const active = order[0];
+    if (!active) return;
+
+    if (portraitDetailIndex) portraitDetailIndex.textContent = active.dataset.index || '01';
+    if (portraitDetailTitle) portraitDetailTitle.textContent = active.dataset.title || 'Portrait Work';
+    if (portraitDetailType) portraitDetailType.textContent = active.dataset.type || 'Portrait Film';
+    if (portraitDetailDescription) {
+      portraitDetailDescription.textContent =
+        active.dataset.description || 'Vertical-format cinematic work designed for mobile-first viewing.';
+    }
+
+    if (!canAnimate || immediate || !detailTargets.length) return;
+    window.gsap.killTweensOf(detailTargets);
+    window.gsap.fromTo(
+      detailTargets,
+      { autoAlpha: 0, y: 8 },
+      { autoAlpha: 1, y: 0, duration: 0.32, stagger: 0.03, ease: 'power2.out' }
+    );
+  };
+
   const renderStack = ({ immediate = false } = {}) => {
+    const stageShift = window.innerWidth <= 980 ? 0 : -Math.min(60, Math.round(stage.clientWidth * 0.06));
+    const spreadX = window.innerWidth <= 980 ? 20 : 24;
+    const spreadY = window.innerWidth <= 980 ? 11 : 13;
     order.forEach((card, index) => {
       const visible = index < 5;
       const vars = {
         xPercent: -50,
         yPercent: -50,
-        x: index * 26,
-        y: index * 14,
+        x: stageShift + index * spreadX,
+        y: index * spreadY,
         rotate: index * 1.35,
         scale: 1 - index * 0.045,
         zIndex: order.length - index,
@@ -407,6 +441,7 @@ function initPortraitCardStack() {
       }
     });
     syncPlayA11y();
+    syncFrontCardDetails({ immediate });
   };
 
   const moveTopToBack = () => {
@@ -478,6 +513,10 @@ function initPortraitCardStack() {
       event.preventDefault();
       openTopCard();
     }
+  });
+
+  window.addEventListener('resize', () => {
+    renderStack({ immediate: true });
   });
 
   renderStack({ immediate: true });
