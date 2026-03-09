@@ -514,6 +514,10 @@ function initPortraitCardStack() {
   const renderStack = ({ immediate = false } = {}) => {
     const spreadX = window.innerWidth <= 980 ? 20 : 24;
     const spreadY = window.innerWidth <= 980 ? 11 : 13;
+    const isMobilePortraitLayout = window.innerWidth <= 760;
+    const mobileTopShift = isMobilePortraitLayout
+      ? Math.min(220, Math.max(140, stage.clientHeight * 0.26))
+      : 0;
     const visibleCount = Math.min(5, order.length);
     const stackSpanX = spreadX * Math.max(0, visibleCount - 1);
     const detailPanel = stage.querySelector('.portrait-detail');
@@ -540,7 +544,7 @@ function initPortraitCardStack() {
         xPercent: -50,
         yPercent: -50,
         x: baseShift + index * spreadX,
-        y: index * spreadY,
+        y: mobileTopShift + index * spreadY,
         rotate: index * 1.35,
         scale: 1 - index * 0.045,
         zIndex: order.length - index,

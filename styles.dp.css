@@ -1485,7 +1485,7 @@ body.page-transitioning {
   }
 
   .portrait-stage {
-    min-height: clamp(620px, 88vh, 820px);
+    min-height: clamp(700px, 94svh, 900px);
     border-radius: 16px;
   }
 
@@ -1527,8 +1527,8 @@ body.page-transitioning {
   }
 
   .portrait-card {
-    width: clamp(184px, 56vw, 264px);
-    top: 68%;
+    width: clamp(164px, 47vw, 228px);
+    top: 72%;
     border-radius: 16px;
   }
 
@@ -1590,7 +1590,7 @@ body.page-transitioning {
 
 @media (max-width: 480px) {
   .portrait-stage {
-    min-height: clamp(620px, 88svh, 760px);
+    min-height: clamp(700px, 96svh, 840px);
   }
 
   .portrait-detail {
@@ -1606,8 +1606,8 @@ body.page-transitioning {
   }
 
   .portrait-card {
-    width: min(62vw, 244px);
-    top: 71%;
+    width: min(54vw, 214px);
+    top: 74%;
   }
 
   .portrait-controls .control-btn {
