@@ -413,7 +413,16 @@ function initPortraitCardStack() {
   };
 
   const renderStack = ({ immediate = false } = {}) => {
-    const stageShift = window.innerWidth <= 980 ? 0 : -Math.min(60, Math.round(stage.clientWidth * 0.06));
+    let stageShift = 0;
+    if (window.innerWidth > 980) {
+      const detailPanel = stage.querySelector('.portrait-detail');
+      const leadCard = order[0];
+      const detailRight = detailPanel ? detailPanel.offsetLeft + detailPanel.offsetWidth : 0;
+      const cardWidth = leadCard ? leadCard.offsetWidth : 280;
+      const desiredLeftEdge = detailRight + 28;
+      const requiredShift = desiredLeftEdge + cardWidth / 2 - stage.clientWidth / 2;
+      stageShift = Math.max(requiredShift, 42);
+    }
     const spreadX = window.innerWidth <= 980 ? 20 : 24;
     const spreadY = window.innerWidth <= 980 ? 11 : 13;
     order.forEach((card, index) => {
