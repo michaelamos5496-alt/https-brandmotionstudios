@@ -67,7 +67,7 @@
         root.style.colorScheme = initialTheme;
       })();
     </script>
-    <link rel="stylesheet" href="styles.dp.css?v=20260306k" />
+    <link rel="stylesheet" href="styles.dp.css?v=20260306l" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -549,11 +549,90 @@
           <p>Dedicated space for mobile-first edits and vertical campaign cuts.</p>
         </div>
         <div class="portrait-shell">
-          <p class="codepen" data-height="720" data-pen-title="Flip Cards" data-default-tab="html,result" data-slug-hash="Yzdzxem" data-user="GreenSock" style="height: 720px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
-            <span>See the Pen <a href="https://codepen.io/GreenSock/pen/Yzdzxem">
-            Flip Cards</a> by GSAP (<a href="https://codepen.io/GreenSock">@GreenSock</a>)
-            on <a href="https://codepen.io">CodePen</a>.</span>
-          </p>
+          <div class="portrait-stack" id="portraitStack" aria-label="Portrait works card stack" tabindex="0">
+            <div class="portrait-stage">
+              <article
+                class="portrait-card"
+                data-title="TYE FUSION AURA COLLECTION CAMPAIGN"
+                data-play-url="https://www.youtube.com/embed/ASQsCTBuB14?autoplay=1&mute=1&loop=1&playlist=ASQsCTBuB14&controls=1&rel=0"
+              >
+                <img
+                  src="https://images.pixieset.com/443758701/da1f1a97ebe986f1a70476a15413e135-xxlarge.jpg"
+                  alt="TYE Fusion Aura Collection Campaign"
+                  loading="lazy"
+                />
+                <div class="portrait-card-meta">
+                  <p class="portrait-index">01</p>
+                  <h3>TYE FUSION AURA</h3>
+                </div>
+              </article>
+              <article
+                class="portrait-card"
+                data-title="VICTOR & ELLA MARRIAGE TEASER"
+                data-play-url="https://www.youtube.com/embed/5_SDB5Ozl20?autoplay=1&mute=1&loop=1&playlist=5_SDB5Ozl20&controls=1&rel=0"
+              >
+                <img
+                  src="https://images.pixieset.com/443758701/f42eb2e99894a30990a85529b2edc08b-xxlarge.jpg"
+                  alt="Victor and Ella Marriage Teaser"
+                  loading="lazy"
+                />
+                <div class="portrait-card-meta">
+                  <p class="portrait-index">02</p>
+                  <h3>VICTOR & ELLA</h3>
+                </div>
+              </article>
+              <article
+                class="portrait-card"
+                data-title="MARVINBROOKS MUSIC"
+                data-play-url="https://player.vimeo.com/video/1164509809?fl=tl&fe=ec&autoplay=1&muted=0&background=0&title=0&byline=0&portrait=0"
+              >
+                <img
+                  src="https://images.pixieset.com/443758701/01b88df056310d4e7958d2d047bb05c5-xxlarge.jpg"
+                  alt="MarvinBrooks Music"
+                  loading="lazy"
+                />
+                <div class="portrait-card-meta">
+                  <p class="portrait-index">03</p>
+                  <h3>MARVINBROOKS MUSIC</h3>
+                </div>
+              </article>
+              <article
+                class="portrait-card"
+                data-title="Anniversary Celebration"
+                data-play-url="https://player.vimeo.com/video/1164505617?autoplay=1&muted=0&background=0&title=0&byline=0&portrait=0"
+              >
+                <img
+                  src="https://images.pixieset.com/443758701/a76d64efc01d11cda17c95e37876da88-xxlarge.jpg"
+                  alt="Anniversary Celebration"
+                  loading="lazy"
+                />
+                <div class="portrait-card-meta">
+                  <p class="portrait-index">04</p>
+                  <h3>ANNIVERSARY</h3>
+                </div>
+              </article>
+              <article
+                class="portrait-card"
+                data-title="Chocolate Clothing Global Fashion Campaign '25"
+                data-play-url="https://player.vimeo.com/video/1123537845?h=1015681fcb&autoplay=1&muted=0&background=0&title=0&byline=0&portrait=0"
+              >
+                <img
+                  src="https://images.pixieset.com/443758701/53ced2d7f457532be49620791576e6f7-xxlarge.jpg"
+                  alt="Chocolate Clothing Global Fashion Campaign"
+                  loading="lazy"
+                />
+                <div class="portrait-card-meta">
+                  <p class="portrait-index">05</p>
+                  <h3>CHOCOLATE CLOTHING</h3>
+                </div>
+              </article>
+            </div>
+            <div class="portrait-controls">
+              <button class="control-btn" id="portraitPrevBtn" type="button">Previous</button>
+              <button class="control-btn" id="portraitPlayBtn" type="button">Play Selected</button>
+              <button class="control-btn" id="portraitNextBtn" type="button">Next</button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -816,8 +895,7 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/Observer.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/SplitText.min.js"></script>
-    <script async src="https://public.codepenassets.com/embed/index.js"></script>
-    <script src="script.js?v=20260306f"></script>
+    <script src="script.js?v=20260306g"></script>
     <script src="bts-slider.js?v=20260306d"></script>
   </body>
 </html>

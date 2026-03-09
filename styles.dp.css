@@ -800,7 +800,7 @@ main > .portfolio {
 
 .portrait-shell {
   margin-top: 1.1rem;
-  width: min(100%, 640px);
+  width: min(100%, 960px);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius);
   background: var(--surface);
@@ -808,11 +808,87 @@ main > .portfolio {
   overflow: hidden;
 }
 
-.portrait-shell .codepen {
-  margin: 0 !important;
-  border: 0 !important;
-  padding: 0 !important;
-  min-height: clamp(560px, 78vh, 840px);
+.portrait-stack {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(0.85rem, 1.8vw, 1.2rem);
+}
+
+.portrait-stage {
+  position: relative;
+  min-height: clamp(520px, 72vh, 860px);
+  border: 1px solid var(--border-soft);
+  border-radius: calc(var(--radius) - 8px);
+  background:
+    radial-gradient(circle at 15% 15%, rgba(198, 167, 94, 0.14), transparent 45%),
+    var(--surface-2);
+  overflow: hidden;
+}
+
+.portrait-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(210px, 24vw, 360px);
+  aspect-ratio: 9 / 16;
+  border: 1px solid var(--border-mid);
+  border-radius: 20px;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  background: #000;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.38);
+}
+
+.portrait-card.is-active {
+  border-color: var(--accent);
+}
+
+.portrait-card img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.portrait-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.1) 50%, transparent 72%);
+  pointer-events: none;
+}
+
+.portrait-card-meta {
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.7rem;
+  z-index: 2;
+  color: var(--text-on-media);
+}
+
+.portrait-index {
+  margin: 0 0 0.12rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.64rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.portrait-card-meta h3 {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: clamp(0.75rem, 1.45vw, 1rem);
+  line-height: 1.1;
+}
+
+.portrait-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
 }
 
 .bts-strip {
@@ -1332,8 +1408,12 @@ body.page-transitioning {
     width: 100%;
   }
 
-  .portrait-shell .codepen {
-    min-height: clamp(460px, 72vh, 640px);
+  .portrait-stage {
+    min-height: clamp(430px, 62vh, 620px);
+  }
+
+  .portrait-card {
+    width: clamp(170px, 54vw, 250px);
   }
 
   .services-grid,

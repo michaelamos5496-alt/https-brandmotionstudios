@@ -29,6 +29,10 @@ const whatsappLink = document.querySelector('a[href^="https://wa.me/"]');
 const countrySelect = document.getElementById('countrySelect');
 const projectLocationSelect = document.getElementById('projectLocationSelect');
 const phoneInput = document.getElementById('phoneInput');
+const portraitStack = document.getElementById('portraitStack');
+const portraitPrevBtn = document.getElementById('portraitPrevBtn');
+const portraitNextBtn = document.getElementById('portraitNextBtn');
+const portraitPlayBtn = document.getElementById('portraitPlayBtn');
 const localPreviewVideos = Array.from(
   document.querySelectorAll(
     '#project-03 .media-still video, #project-04 .media-still video, #project-05 .media-still video, #project-06 .media-still video'
@@ -357,6 +361,126 @@ function initBtsImageResilience() {
       img.src = fallbackSrc;
     });
   });
+}
+
+function initPortraitCardStack() {
+  if (!portraitStack) return;
+  const stage = portraitStack.querySelector('.portrait-stage');
+  if (!stage) return;
+
+  const cards = Array.from(stage.querySelectorAll('.portrait-card'));
+  if (!cards.length) return;
+
+  const canAnimate = hasGsap && !prefersReducedMotion.matches;
+  let order = [...cards];
+  let isAnimating = false;
+
+  const syncPlayA11y = () => {
+    if (!portraitPlayBtn) return;
+    const title = order[0]?.dataset.title || 'selected portrait work';
+    portraitPlayBtn.setAttribute('aria-label', `Play ${title}`);
+  };
+
+  const renderStack = ({ immediate = false } = {}) => {
+    order.forEach((card, index) => {
+      const visible = index < 5;
+      const vars = {
+        xPercent: -50,
+        yPercent: -50,
+        x: index * 26,
+        y: index * 14,
+        rotate: index * 1.35,
+        scale: 1 - index * 0.045,
+        zIndex: order.length - index,
+        autoAlpha: visible ? 1 : 0,
+        duration: immediate ? 0 : 0.45,
+        ease: 'power3.out'
+      };
+
+      card.classList.toggle('is-active', index === 0);
+      if (canAnimate) {
+        window.gsap.to(card, vars);
+      } else {
+        card.style.transform = `translate(-50%, -50%) translate(${vars.x}px, ${vars.y}px) rotate(${vars.rotate}deg) scale(${vars.scale})`;
+        card.style.zIndex = String(vars.zIndex);
+        card.style.opacity = visible ? '1' : '0';
+      }
+    });
+    syncPlayA11y();
+  };
+
+  const moveTopToBack = () => {
+    if (isAnimating || order.length < 2) return;
+    isAnimating = true;
+    const first = order.shift();
+    order.push(first);
+    renderStack();
+    window.setTimeout(() => {
+      isAnimating = false;
+    }, 480);
+  };
+
+  const moveBackToTop = () => {
+    if (isAnimating || order.length < 2) return;
+    isAnimating = true;
+    const last = order.pop();
+    order.unshift(last);
+    renderStack();
+    window.setTimeout(() => {
+      isAnimating = false;
+    }, 480);
+  };
+
+  const openTopCard = () => {
+    const url = order[0]?.dataset.playUrl;
+    if (!url) return;
+    trackEvent('play_video_click', { project_id: 'portrait_stack' });
+    openPlayer(buildPopupUrlFromPreview(url));
+    requestPlayerFullscreen();
+  };
+
+  if (portraitNextBtn) {
+    portraitNextBtn.addEventListener('click', moveTopToBack);
+  }
+  if (portraitPrevBtn) {
+    portraitPrevBtn.addEventListener('click', moveBackToTop);
+  }
+  if (portraitPlayBtn) {
+    portraitPlayBtn.addEventListener('click', openTopCard);
+  }
+
+  stage.addEventListener('click', (event) => {
+    const card = event.target instanceof Element ? event.target.closest('.portrait-card') : null;
+    if (!card) return;
+    const clickedIndex = order.indexOf(card);
+    if (clickedIndex === -1) return;
+    if (clickedIndex === 0) {
+      openTopCard();
+      return;
+    }
+    order.splice(clickedIndex, 1);
+    order.unshift(card);
+    renderStack();
+  });
+
+  portraitStack.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      moveTopToBack();
+      return;
+    }
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      moveBackToTop();
+      return;
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openTopCard();
+    }
+  });
+
+  renderStack({ immediate: true });
 }
 
 function getSwipeSections() {
@@ -1297,6 +1421,7 @@ initMorphPageTransitions();
 initGsapSwipeSlider();
 initAboutSplitAnimation();
 initBtsImageResilience();
+initPortraitCardStack();
 schedulePinnedPanelsRebuild(30);
 
 window.addEventListener(
