@@ -1528,7 +1528,7 @@ body.page-transitioning {
 
   .portrait-card {
     width: clamp(164px, 47vw, 228px);
-    top: 72%;
+    top: 50%;
     border-radius: 16px;
   }
 
@@ -1607,7 +1607,7 @@ body.page-transitioning {
 
   .portrait-card {
     width: min(54vw, 214px);
-    top: 74%;
+    top: 50%;
   }
 
   .portrait-controls .control-btn {

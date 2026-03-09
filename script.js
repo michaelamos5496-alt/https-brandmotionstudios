@@ -515,9 +515,6 @@ function initPortraitCardStack() {
     const spreadX = window.innerWidth <= 980 ? 20 : 24;
     const spreadY = window.innerWidth <= 980 ? 11 : 13;
     const isMobilePortraitLayout = window.innerWidth <= 760;
-    const mobileTopShift = isMobilePortraitLayout
-      ? Math.min(220, Math.max(140, stage.clientHeight * 0.26))
-      : 0;
     const visibleCount = Math.min(5, order.length);
     const stackSpanX = spreadX * Math.max(0, visibleCount - 1);
     const detailPanel = stage.querySelector('.portrait-detail');
@@ -537,6 +534,18 @@ function initPortraitCardStack() {
     const zoneCenter = (zoneLeft + zoneRight) / 2;
     const targetCenterOffset = zoneCenter - stage.clientWidth / 2;
     const baseShift = targetCenterOffset - stackSpanX / 2;
+    let mobileTopShift = 0;
+
+    if (isMobilePortraitLayout) {
+      const activeCard = order[0];
+      const cardHeight = activeCard?.offsetHeight || Math.min(390, stage.clientHeight * 0.58);
+      const panelBottom = detailPanel ? detailPanel.offsetTop + detailPanel.offsetHeight : 0;
+      const minTop = panelBottom + 18;
+      const centerY = stage.clientHeight / 2;
+      const requiredShift = minTop + cardHeight / 2 - centerY;
+      const maxShift = Math.max(0, stage.clientHeight - cardHeight * 0.52 - centerY);
+      mobileTopShift = Math.max(0, Math.min(maxShift, requiredShift));
+    }
 
     order.forEach((card, index) => {
       const visible = index < 5;
