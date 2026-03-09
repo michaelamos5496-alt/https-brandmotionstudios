@@ -202,61 +202,33 @@ function initGsapAnimations() {
 
   document.querySelectorAll('.hero .section-reveal').forEach((el) => el.classList.add('visible'));
 
-  // 1) Overlapping timeline animation for page intro.
-  const introTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-  introTl
-    .from('.topbar', { y: -22, autoAlpha: 0, duration: 0.75 }, 0)
-    .from('.brand', { y: -12, autoAlpha: 0, duration: 0.5 }, 0.08)
-    .from('.menu a', { y: -10, autoAlpha: 0, duration: 0.52, stagger: 0.07 }, 0.14)
-    .from('.hero .kicker', { y: 24, autoAlpha: 0, duration: 0.6 }, 0.24)
-    .from('.hero h1', { y: 40, autoAlpha: 0, duration: 0.84 }, 0.34)
-    .from('.hero .scroll-link', { y: 16, autoAlpha: 0, duration: 0.52 }, 0.54);
-
-  // 2) Stagger animation for key text/content groups.
-  const staggerGroups = [
-    '.featured-overlay',
-    '.portrait-head',
-    '.bts-head',
-    '.services-head',
-    '.process-head',
-    '.inquiry-head',
-    '#contact',
-    '.portrait-detail'
-  ];
-
-  staggerGroups.forEach((selector) => {
-    gsap.utils.toArray(selector).forEach((group) => {
-      const children = Array.from(group.children).filter(
-        (node) => node instanceof HTMLElement && !node.hidden
-      );
-      if (!children.length) return;
-
-      const staggerVars = {
-        y: 24,
-        autoAlpha: 0,
-        duration: 0.66,
-        stagger: 0.08,
-        ease: 'power2.out'
-      };
-
-      if (hasScrollTrigger) {
-        staggerVars.scrollTrigger = {
-          trigger: group,
-          start: 'top 84%',
-          once: true
-        };
-      }
-
-      gsap.from(children, staggerVars);
-    });
+  gsap.from('.topbar', {
+    y: -20,
+    autoAlpha: 0,
+    duration: 0.8,
+    ease: 'power3.out'
   });
+
+  gsap.from('.menu a', {
+    y: -10,
+    autoAlpha: 0,
+    duration: 0.55,
+    stagger: 0.08,
+    ease: 'power2.out',
+    delay: 0.12
+  });
+
+  const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  heroTl
+    .from('.hero .kicker', { y: 22, autoAlpha: 0, duration: 0.62 })
+    .from('.hero h1', { y: 36, autoAlpha: 0, duration: 0.82 }, '-=0.32')
+    .from('.hero .scroll-link', { y: 16, autoAlpha: 0, duration: 0.55 }, '-=0.34');
 
   if (!hasScrollTrigger) {
     sections.forEach((section) => section.classList.add('visible'));
     return true;
   }
 
-  // 3) Scroll-triggered animation for sections.
   gsap.utils.toArray('.section-reveal').forEach((section, index) => {
     if (section.closest('.hero')) return;
     const direction = index % 2 === 0 ? 18 : -18;
@@ -276,31 +248,6 @@ function initGsapAnimations() {
         }
       }
     );
-  });
-
-  // Extra scroll-triggered timeline on portfolio cards with overlapping media/meta motion.
-  gsap.utils.toArray('.work-item').forEach((item) => {
-    const media = item.querySelector('.work-media');
-    const meta = item.querySelector('.work-meta');
-    const metaParts = meta
-      ? Array.from(meta.querySelectorAll('.meta-top, .meta-label, h3, .meta-value, .control-row'))
-      : [];
-    if (!media && !meta) return;
-
-    const cardTl = gsap.timeline({
-      defaults: { ease: 'power2.out' },
-      scrollTrigger: {
-        trigger: item,
-        start: 'top 86%',
-        once: true
-      }
-    });
-
-    if (media) cardTl.from(media, { x: -34, autoAlpha: 0, duration: 0.72 }, 0);
-    if (meta) cardTl.from(meta, { x: 34, autoAlpha: 0, duration: 0.72 }, 0.08);
-    if (metaParts.length) {
-      cardTl.from(metaParts, { y: 14, autoAlpha: 0, duration: 0.42, stagger: 0.05 }, 0.2);
-    }
   });
 
   return true;
