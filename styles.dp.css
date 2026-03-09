@@ -1088,6 +1088,80 @@ main > .portfolio {
   justify-content: center;
 }
 
+/* BTS gallery layout (cards + prev/next + drag) */
+.bts-gallery-wrap {
+  width: min(100%, 1800px);
+  margin: 1.15rem auto 0;
+}
+
+.gallery {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 14% 14%, rgba(198, 167, 94, 0.14), transparent 48%),
+    var(--surface);
+  box-shadow: var(--shadow);
+  padding: clamp(0.8rem, 1.5vw, 1rem);
+  overflow: hidden;
+  outline: none;
+}
+
+.gallery:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent), var(--shadow);
+}
+
+.gallery .cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: clamp(0.55rem, 1vw, 0.9rem);
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  will-change: transform;
+}
+
+.gallery .cards.is-dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+.gallery .cards li {
+  flex: 0 0 clamp(175px, 20vw, 270px);
+  aspect-ratio: 9 / 16;
+  border-radius: 18px;
+  border: 1px solid var(--border-mid);
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+.gallery .actions {
+  margin-top: 0.9rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.58rem;
+  flex-wrap: wrap;
+}
+
+.gallery .actions .control-btn {
+  min-width: 108px;
+}
+
+.drag-proxy {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  left: -9999px;
+  top: -9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .services-grid,
 .process-grid {
   margin-top: 1.15rem;
@@ -1574,6 +1648,21 @@ body.page-transitioning {
     flex-basis: clamp(180px, 68vw, 300px);
   }
 
+  .gallery {
+    padding: 0.7rem;
+    border-radius: 16px;
+  }
+
+  .gallery .cards li {
+    flex-basis: clamp(144px, 40vw, 210px);
+    border-radius: 14px;
+  }
+
+  .gallery .actions .control-btn {
+    min-width: 96px;
+    min-height: 42px;
+  }
+
   .work-media {
     min-height: 58vh;
   }
@@ -1613,6 +1702,19 @@ body.page-transitioning {
   .portrait-controls .control-btn {
     font-size: 0.6rem;
     min-height: 42px;
+  }
+
+  .gallery .cards li {
+    flex-basis: min(48vw, 190px);
+  }
+
+  .gallery .actions {
+    gap: 0.46rem;
+  }
+
+  .gallery .actions .control-btn {
+    min-width: 84px;
+    font-size: 0.62rem;
   }
 }
 
