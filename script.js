@@ -436,6 +436,57 @@ function initPortraitCardStack() {
     }
   };
 
+  const ensurePortraitPreviewIframe = (card) => {
+    if (!card) return null;
+    let iframe = card.querySelector('iframe');
+    const placeholderImg = card.querySelector('img');
+    const previewUrl =
+      card.dataset.previewUrl ||
+      (iframe ? iframe.getAttribute('src') : '') ||
+      card.dataset.playUrl ||
+      '';
+    if (!previewUrl) return iframe || null;
+
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.title = card.dataset.title || 'Portrait preview';
+      iframe.loading = 'lazy';
+      iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+      iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      const meta = card.querySelector('.portrait-card-meta');
+      if (meta) {
+        card.insertBefore(iframe, meta);
+      } else {
+        card.appendChild(iframe);
+      }
+    }
+
+    if (!iframe.dataset.previewBaseSrc) {
+      iframe.dataset.previewBaseSrc = normalizeIframePreviewSrc(previewUrl, { autoplay: '1' });
+    }
+
+    if (placeholderImg) {
+      placeholderImg.style.display = 'none';
+    }
+
+    return iframe;
+  };
+
+  const releasePortraitPreviewIframe = (card) => {
+    if (!card) return;
+    const iframe = card.querySelector('iframe');
+    const placeholderImg = card.querySelector('img');
+    if (!iframe) return;
+
+    iframe.src = 'about:blank';
+    if (card.dataset.previewLazy === '1') {
+      iframe.remove();
+      if (placeholderImg) {
+        placeholderImg.style.display = '';
+      }
+    }
+  };
+
   const triggerYoutubePreviewPlayback = (iframe) => {
     if (!iframe || !iframe.contentWindow) return;
     let targetOrigin = '*';
@@ -463,27 +514,28 @@ function initPortraitCardStack() {
 
     // Keep non-front iframe previews paused to avoid conflicting autoplay state.
     order.forEach((card, index) => {
-      const iframe = card.querySelector('iframe');
-      if (!iframe) return;
-
-      const storedSrc = iframe.dataset.previewBaseSrc || iframe.getAttribute('src') || '';
-      if (!storedSrc) return;
-      if (!iframe.dataset.previewBaseSrc) {
-        iframe.dataset.previewBaseSrc = normalizeIframePreviewSrc(storedSrc, { autoplay: '1' });
-      }
-
       if (index !== 0) {
-        const pausedSrc = normalizeIframePreviewSrc(iframe.dataset.previewBaseSrc, { autoplay: '0' });
-        if (pausedSrc && iframe.src !== pausedSrc) {
-          iframe.src = pausedSrc;
+        const iframe = card.querySelector('iframe');
+        if (iframe) {
+          const storedSrc = iframe.dataset.previewBaseSrc || iframe.getAttribute('src') || '';
+          if (storedSrc && !iframe.dataset.previewBaseSrc) {
+            iframe.dataset.previewBaseSrc = normalizeIframePreviewSrc(storedSrc, { autoplay: '1' });
+          }
+          if (iframe.dataset.previewBaseSrc) {
+            const pausedSrc = normalizeIframePreviewSrc(iframe.dataset.previewBaseSrc, { autoplay: '0' });
+            if (pausedSrc && iframe.src !== pausedSrc) {
+              iframe.src = pausedSrc;
+            }
+          }
         }
+        releasePortraitPreviewIframe(card);
       }
     });
 
     if (!activeCard) return;
     if (!force && activeCard === lastFrontCard) return;
 
-    const activeIframe = activeCard.querySelector('iframe');
+    const activeIframe = ensurePortraitPreviewIframe(activeCard);
     if (activeIframe) {
       const storedSrc = activeIframe.dataset.previewBaseSrc || activeIframe.getAttribute('src') || '';
       if (storedSrc) {
