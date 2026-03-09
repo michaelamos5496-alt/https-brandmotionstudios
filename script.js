@@ -1162,20 +1162,25 @@ function openPlayer(url) {
   if (!playerOverlay || !playerFrame || !playerVideo || !url) return;
   pauseLocalPreviews();
   playerOverlay.hidden = false;
-  const isMp4 = url.endsWith('.mp4');
+  const isMp4 = /\.mp4($|\?)/i.test(url);
+  const playerUrl = isMp4 ? url : buildPopupUrlFromPreview(url);
   if (isMp4) {
     playerFrame.src = '';
     playerFrame.hidden = true;
     playerVideo.hidden = false;
     playerVideo.muted = false;
-    playerVideo.src = url;
+    playerVideo.src = playerUrl;
     playerVideo.play().catch(() => {});
   } else {
     playerVideo.pause();
     playerVideo.src = '';
     playerVideo.hidden = true;
     playerFrame.hidden = false;
-    playerFrame.src = url;
+    // Force a fresh iframe navigation so autoplay consistently restarts.
+    playerFrame.src = 'about:blank';
+    requestAnimationFrame(() => {
+      playerFrame.src = playerUrl;
+    });
   }
   document.body.classList.add('player-open');
   requestAnimationFrame(() => playerOverlay.classList.add('is-open'));
