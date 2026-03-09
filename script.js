@@ -1179,7 +1179,13 @@ function openPlayer(url) {
     // Force a fresh iframe navigation so autoplay consistently restarts.
     playerFrame.src = 'about:blank';
     requestAnimationFrame(() => {
-      playerFrame.src = playerUrl;
+      let refreshedUrl = playerUrl;
+      try {
+        const urlObj = new URL(playerUrl);
+        urlObj.searchParams.set('_cb', String(Date.now()));
+        refreshedUrl = urlObj.toString();
+      } catch {}
+      playerFrame.src = refreshedUrl;
     });
   }
   document.body.classList.add('player-open');
@@ -1199,7 +1205,7 @@ function buildPopupUrlFromPreview(previewUrl) {
   const host = parsed.hostname.toLowerCase();
 
   // Keep the same video, but ensure popup playback controls are available.
-  if (host.includes('youtube.com') || host.includes('youtu.be')) {
+  if (host.includes('youtube.com') || host.includes('youtube-nocookie.com') || host.includes('youtu.be')) {
     let videoId = '';
     const pathParts = parsed.pathname.split('/').filter(Boolean);
 
@@ -1225,12 +1231,15 @@ function buildPopupUrlFromPreview(previewUrl) {
 
     const isMuted = parsed.searchParams.get('mute') ?? '1';
     const shouldLoop = parsed.searchParams.get('loop') ?? '1';
-    const embed = new URL(`https://www.youtube.com/embed/${videoId}`);
+    const embed = new URL(`https://www.youtube-nocookie.com/embed/${videoId}`);
     embed.searchParams.set('autoplay', '1');
     embed.searchParams.set('mute', isMuted);
     embed.searchParams.set('controls', '1');
     embed.searchParams.set('rel', '0');
     embed.searchParams.set('playsinline', '1');
+    embed.searchParams.set('modestbranding', '1');
+    embed.searchParams.set('iv_load_policy', '3');
+    embed.searchParams.set('origin', window.location.origin);
     embed.searchParams.set('loop', shouldLoop);
     if (shouldLoop === '1') {
       embed.searchParams.set('playlist', videoId);
