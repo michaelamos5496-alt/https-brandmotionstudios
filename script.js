@@ -420,6 +420,7 @@ function initPortraitCardStack() {
       parsed.searchParams.delete('_cb');
       parsed.searchParams.set('autoplay', autoplay);
       parsed.searchParams.set('mute', parsed.searchParams.get('mute') || '1');
+      parsed.searchParams.set('muted', parsed.searchParams.get('muted') || '1');
       parsed.searchParams.set('playsinline', '1');
       const host = parsed.hostname.toLowerCase();
       if (host.includes('youtube.com') || host.includes('youtube-nocookie.com') || host.includes('youtu.be')) {
