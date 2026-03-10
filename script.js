@@ -154,60 +154,6 @@ function initThemeToggle() {
   requestAnimationFrame(() => rootElement.classList.add('theme-ready'));
 }
 
-function initLiquidGlass() {
-  const glassPanels = Array.from(document.querySelectorAll('[data-liquid-glass], .liquid-glass')).filter(
-    (el) => el instanceof HTMLElement
-  );
-  if (!glassPanels.length) return;
-
-  const setCenter = (el) => {
-    el.style.setProperty('--mx', `${Math.round(el.clientWidth * 0.5)}px`);
-    el.style.setProperty('--my', `${Math.round(el.clientHeight * 0.5)}px`);
-  };
-
-  glassPanels.forEach((el) => {
-    if (!el.classList.contains('liquid-glass')) {
-      el.classList.add('liquid-glass');
-    }
-    setCenter(el);
-  });
-
-  if (prefersReducedMotion.matches || isCoarsePointer) {
-    return;
-  }
-
-  glassPanels.forEach((el) => {
-    let rafId = 0;
-    let clientX = 0;
-    let clientY = 0;
-
-    const updatePointerGlow = () => {
-      rafId = 0;
-      const rect = el.getBoundingClientRect();
-      const x = Math.max(0, Math.min(rect.width, clientX - rect.left));
-      const y = Math.max(0, Math.min(rect.height, clientY - rect.top));
-      el.style.setProperty('--mx', `${Math.round(x)}px`);
-      el.style.setProperty('--my', `${Math.round(y)}px`);
-    };
-
-    el.addEventListener('pointermove', (event) => {
-      clientX = event.clientX;
-      clientY = event.clientY;
-      if (!rafId) {
-        rafId = window.requestAnimationFrame(updatePointerGlow);
-      }
-    });
-
-    el.addEventListener('pointerleave', () => {
-      setCenter(el);
-    });
-  });
-
-  window.addEventListener('resize', () => {
-    glassPanels.forEach((el) => setCenter(el));
-  });
-}
-
 function isMobileMenuOpen() {
   return Boolean(menuToggle && menuToggle.getAttribute('aria-expanded') === 'true');
 }
@@ -1780,7 +1726,6 @@ window.addEventListener('pageshow', () => {
 
 initThemeToggle();
 initMobileMenu();
-initLiquidGlass();
 initMorphPageTransitions();
 initGsapSwipeSlider();
 initAboutSplitAnimation();
