@@ -836,6 +836,8 @@ function initHeroMotion() {
   if (!heroSection || !heroImage || !heroScrim) return;
 
   heroSection.classList.add('visible');
+  heroCopy?.classList.add('visible');
+  heroScroll?.classList.add('visible');
 
   if (!hasGsap || prefersReducedMotion.matches) {
     heroImage.style.setProperty('--hero-scale', '1');
@@ -843,11 +845,24 @@ function initHeroMotion() {
     heroImage.style.setProperty('--hero-blur', '0px');
     heroImage.style.setProperty('--hero-brightness', '1');
     heroScrim.style.setProperty('--hero-scrim-opacity', '1');
+    if (heroCopy) {
+      heroCopy.style.opacity = '1';
+      heroCopy.style.transform = 'none';
+    }
+    if (heroScroll) {
+      heroScroll.style.opacity = '1';
+      heroScroll.style.transform = 'none';
+    }
     return;
   }
 
   const gsap = window.gsap;
   if (hasScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
+
+  gsap.set([heroCopy, heroScroll].filter(Boolean), {
+    autoAlpha: 1,
+    y: 0
+  });
 
   gsap.set(heroImage, {
     '--hero-scale': 1.08,
@@ -906,8 +921,8 @@ function initHeroMotion() {
       ease: 'none',
       scrollTrigger: {
         trigger: featuredSection,
-        start: 'top 88%',
-        end: 'top 42%',
+        start: 'top 72%',
+        end: 'top 36%',
         scrub: 0.8
       }
     });
@@ -917,8 +932,8 @@ function initHeroMotion() {
       ease: 'none',
       scrollTrigger: {
         trigger: featuredSection,
-        start: 'top 90%',
-        end: 'top 32%',
+        start: 'top 74%',
+        end: 'top 30%',
         scrub: 0.8
       }
     });
