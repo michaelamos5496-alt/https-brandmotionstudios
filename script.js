@@ -839,6 +839,14 @@ function initHeroMotion() {
   heroCopy?.classList.add('visible');
   heroScroll?.classList.add('visible');
 
+  const heroWords = hasGsap ? window.gsap.utils.toArray('.hero-word') : [];
+  const heroSecondary = [
+    document.querySelector('.hero-subcopy'),
+    document.querySelector('.hero-actions'),
+    ...Array.from(document.querySelectorAll('.hero-proof-item')),
+    heroScroll
+  ].filter(Boolean);
+
   if (!hasGsap || prefersReducedMotion.matches) {
     heroImage.style.setProperty('--hero-scale', '1');
     heroImage.style.setProperty('--hero-y-offset', '0px');
@@ -863,6 +871,18 @@ function initHeroMotion() {
     autoAlpha: 1,
     y: 0
   });
+  if (heroWords.length) {
+    gsap.set(heroWords, {
+      yPercent: 120,
+      autoAlpha: 0
+    });
+  }
+  if (heroSecondary.length) {
+    gsap.set(heroSecondary, {
+      y: 28,
+      autoAlpha: 0
+    });
+  }
 
   gsap.set(heroImage, {
     '--hero-scale': 1.08,
@@ -888,6 +908,28 @@ function initHeroMotion() {
     duration: 1.45,
     ease: 'power2.out'
   }, 0.08);
+
+  if (heroWords.length) {
+    loadTimeline.to(heroWords, {
+      yPercent: 0,
+      autoAlpha: 1,
+      duration: 1.02,
+      stagger: 0.05,
+      ease: 'power4.out',
+      clearProps: 'opacity,transform'
+    }, 0.24);
+  }
+
+  if (heroSecondary.length) {
+    loadTimeline.to(heroSecondary, {
+      y: 0,
+      autoAlpha: 1,
+      duration: 0.82,
+      stagger: 0.08,
+      ease: 'power3.out',
+      clearProps: 'opacity,transform'
+    }, 0.66);
+  }
 
   if (!hasScrollTrigger) return;
 
@@ -1076,26 +1118,6 @@ function initSectionReveals() {
   if (hasGsap && !prefersReducedMotion.matches) {
     const gsap = window.gsap;
     if (hasScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
-
-    if (document.querySelectorAll('.hero-word').length) {
-      gsap.from('.hero-word', {
-        yPercent: 120,
-        autoAlpha: 0,
-        duration: 1,
-        stagger: 0.045,
-        ease: 'power4.out',
-        delay: 0.15
-      });
-    }
-
-    gsap.from('.hero-subcopy, .hero-actions, .hero-proof-item, .hero-scroll', {
-      y: 28,
-      autoAlpha: 0,
-      duration: 0.8,
-      stagger: 0.1,
-      ease: 'power3.out',
-      delay: 0.6
-    });
 
     gsap.utils.toArray('.section-reveal').forEach((section) => {
       if (section.closest('.hero') || section.id === 'portfolio') return;
