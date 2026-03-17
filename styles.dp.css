@@ -528,7 +528,7 @@ html[data-theme="light"] .theme-icon-moon {
   left: 50%;
   width: max(100vw, 177.78vh);
   height: max(56.25vw, 100vh);
-  transform: translate(-50%, -50%) scale(1.02);
+  transform: translate(-50%, calc(-50% + var(--hero-y-offset, 0px))) scale(var(--hero-scale, 1.02));
 }
 
 .hero-media iframe {
@@ -538,12 +538,16 @@ html[data-theme="light"] .theme-icon-moon {
 
 .hero-media img {
   object-fit: cover;
+  filter: blur(var(--hero-blur, 0px)) brightness(var(--hero-brightness, 1));
+  will-change: transform, filter;
 }
 
 .hero-scrim {
+  opacity: var(--hero-scrim-opacity, 1);
   background:
     linear-gradient(180deg, var(--hero-overlay-top), var(--hero-overlay-mid) 44%, var(--hero-overlay-bottom)),
     radial-gradient(circle at 50% 25%, transparent 0, rgba(0, 0, 0, 0.08) 36%, rgba(0, 0, 0, 0.48) 100%);
+  will-change: opacity;
 }
 
 .hero-shell {
@@ -563,6 +567,7 @@ html[data-theme="light"] .theme-icon-moon {
   text-align: center;
   display: grid;
   gap: 1.2rem;
+  will-change: transform, opacity;
 }
 
 .hero-copy .eyebrow {
@@ -637,6 +642,7 @@ html[data-theme="light"] .theme-icon-moon {
 .hero-scroll {
   display: flex;
   justify-content: center;
+  will-change: transform, opacity;
 }
 
 .scroll-indicator {

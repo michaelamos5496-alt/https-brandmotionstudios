@@ -1,5 +1,11 @@
 const rootElement = document.documentElement;
 const topbar = document.querySelector('.topbar');
+const heroSection = document.querySelector('.hero');
+const heroImage = document.querySelector('.hero-media img');
+const heroScrim = document.querySelector('.hero-scrim');
+const heroCopy = document.querySelector('.hero-copy');
+const heroScroll = document.querySelector('.hero-scroll');
+const featuredSection = document.getElementById('featured');
 const themeToggles = Array.from(document.querySelectorAll('[data-theme-toggle]'));
 const menuToggle = document.getElementById('menuToggle');
 const mobileMenu = document.getElementById('mobileMenu');
@@ -826,6 +832,99 @@ function initBtsTracks() {
   });
 }
 
+function initHeroMotion() {
+  if (!heroSection || !heroImage || !heroScrim) return;
+
+  heroSection.classList.add('visible');
+
+  if (!hasGsap || prefersReducedMotion.matches) {
+    heroImage.style.setProperty('--hero-scale', '1');
+    heroImage.style.setProperty('--hero-y-offset', '0px');
+    heroImage.style.setProperty('--hero-blur', '0px');
+    heroImage.style.setProperty('--hero-brightness', '1');
+    heroScrim.style.setProperty('--hero-scrim-opacity', '1');
+    return;
+  }
+
+  const gsap = window.gsap;
+  if (hasScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
+
+  gsap.set(heroImage, {
+    '--hero-scale': 1.08,
+    '--hero-y-offset': '0px',
+    '--hero-blur': '7px',
+    '--hero-brightness': 0.9
+  });
+  gsap.set(heroScrim, { '--hero-scrim-opacity': 0.82 });
+
+  const loadTimeline = gsap.timeline({
+    defaults: { ease: 'power3.out' }
+  });
+
+  loadTimeline.to(heroImage, {
+    '--hero-scale': 1,
+    '--hero-blur': '0px',
+    '--hero-brightness': 1,
+    duration: 1.8
+  }, 0);
+
+  loadTimeline.to(heroScrim, {
+    '--hero-scrim-opacity': 1,
+    duration: 1.45,
+    ease: 'power2.out'
+  }, 0.08);
+
+  if (!hasScrollTrigger) return;
+
+  gsap.to(heroImage, {
+    '--hero-y-offset': '48px',
+    '--hero-brightness': 0.84,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: heroSection,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 0.8
+    }
+  });
+
+  gsap.to(heroScrim, {
+    '--hero-scrim-opacity': 1.08,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: heroSection,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 0.8
+    }
+  });
+
+  if (featuredSection) {
+    gsap.to([heroCopy, heroScroll].filter(Boolean), {
+      y: -56,
+      autoAlpha: 0,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: featuredSection,
+        start: 'top 88%',
+        end: 'top 42%',
+        scrub: 0.8
+      }
+    });
+
+    gsap.to(heroImage, {
+      '--hero-scale': 0.985,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: featuredSection,
+        start: 'top 90%',
+        end: 'top 32%',
+        scrub: 0.8
+      }
+    });
+  }
+}
+
 function initPortfolioGalleryMotion() {
   if (!portfolioSection || !portfolioCards.length) return;
 
@@ -1236,6 +1335,7 @@ initTopbarScroll();
 initPlayButtons();
 initPortfolioCards();
 initPortfolioAutoPreviews();
+initHeroMotion();
 initPortfolioGalleryMotion();
 initPortraitStack();
 initBtsTracks();
