@@ -1387,12 +1387,18 @@ html[data-theme="light"] .theme-icon-moon {
 }
 
 .about-portrait {
+  display: block;
   min-height: clamp(420px, 58vw, 760px);
   overflow: hidden;
 }
 
 .about-portrait img {
+  display: block;
+  width: 100%;
   height: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: center center;
 }
 
 .about-copy {
