@@ -11,6 +11,7 @@ const hasGsap = typeof window.gsap !== 'undefined';
 const hasScrollTrigger = hasGsap && typeof window.ScrollTrigger !== 'undefined';
 const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
 const sectionReveals = Array.from(document.querySelectorAll('.section-reveal'));
+const portfolioSection = document.getElementById('portfolio');
 const portfolioCards = Array.from(document.querySelectorAll('.project-card'));
 const filterChips = Array.from(document.querySelectorAll('.filter-chip'));
 const filterJumpButtons = Array.from(document.querySelectorAll('[data-filter-jump]'));
@@ -57,7 +58,9 @@ let lastModalTrigger = null;
 let projectPreviewObserver = null;
 let portfolioPreviewSyncFrame = 0;
 let portraitPreviewMountTimer = 0;
+let portfolioFilterTimeline = null;
 const portfolioPreviewVisibility = new Map();
+const revealedPortfolioCards = new WeakSet();
 
 function readStoredTheme() {
   try {
@@ -404,27 +407,103 @@ function initPortfolioAutoPreviews() {
   requestPortfolioPreviewSync();
 }
 
-function setActiveFilter(filter) {
+function updatePortfolioFilterChips(filter) {
   activeFilter = filter;
   filterChips.forEach((chip) => {
     const isActive = chip.dataset.filter === filter;
     chip.classList.toggle('is-active', isActive);
     chip.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
+}
 
-  portfolioCards.forEach((card) => {
-    const shouldShow = filter === 'all' || card.dataset.category === filter;
-    card.hidden = !shouldShow;
-    card.classList.toggle('is-hidden', !shouldShow);
-    if (!shouldShow) {
-      portfolioPreviewVisibility.set(card, 0);
-      clearProjectPreview(card);
+function setPortfolioCardVisibility(card, shouldShow) {
+  card.hidden = !shouldShow;
+  card.classList.toggle('is-hidden', !shouldShow);
+  if (!shouldShow) {
+    portfolioPreviewVisibility.set(card, 0);
+    clearProjectPreview(card);
+  }
+}
+
+function setActiveFilter(filter, { animate = true } = {}) {
+  if (!portfolioCards.length) return;
+  if (filter === activeFilter && animate) {
+    requestPortfolioPreviewSync();
+    return;
+  }
+
+  updatePortfolioFilterChips(filter);
+
+  if (!animate || !hasGsap || prefersReducedMotion.matches) {
+    portfolioCards.forEach((card) => {
+      const shouldShow = filter === 'all' || card.dataset.category === filter;
+      setPortfolioCardVisibility(card, shouldShow);
+    });
+
+    requestAnimationFrame(() => {
+      requestPortfolioPreviewSync();
+      if (hasScrollTrigger) window.ScrollTrigger.refresh();
+    });
+    return;
+  }
+
+  const gsap = window.gsap;
+  const outgoingCards = portfolioCards.filter((card) => !card.hidden && filter !== 'all' && card.dataset.category !== filter);
+  const incomingCards = portfolioCards.filter((card) => card.hidden && (filter === 'all' || card.dataset.category === filter));
+
+  portfolioFilterTimeline?.kill();
+  gsap.killTweensOf([...outgoingCards, ...incomingCards]);
+
+  portfolioFilterTimeline = gsap.timeline({
+    defaults: { ease: 'power2.out' },
+    onComplete: () => {
+      portfolioFilterTimeline = null;
+      if (hasScrollTrigger) window.ScrollTrigger.refresh();
+      requestPortfolioPreviewSync();
     }
   });
 
-  requestAnimationFrame(() => {
+  if (outgoingCards.length) {
+    portfolioFilterTimeline.to(outgoingCards, {
+      autoAlpha: 0,
+      y: 16,
+      scale: 0.985,
+      duration: 0.26,
+      stagger: 0.035,
+      overwrite: 'auto'
+    });
+
+    portfolioFilterTimeline.add(() => {
+      outgoingCards.forEach((card) => {
+        setPortfolioCardVisibility(card, false);
+        gsap.set(card, { clearProps: 'opacity,transform' });
+      });
+    });
+  }
+
+  portfolioFilterTimeline.add(() => {
+    incomingCards.forEach((card) => {
+      setPortfolioCardVisibility(card, true);
+      gsap.set(card, { autoAlpha: 0, y: 28, scale: 0.985 });
+    });
+
     requestPortfolioPreviewSync();
+    if (hasScrollTrigger) window.ScrollTrigger.refresh();
   });
+
+  if (incomingCards.length) {
+    portfolioFilterTimeline.to(incomingCards, {
+      autoAlpha: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.72,
+      stagger: 0.07,
+      ease: 'power3.out',
+      overwrite: 'auto',
+      onStart: () => incomingCards.forEach((card) => revealedPortfolioCards.add(card)),
+      onComplete: () => incomingCards.forEach((card) => gsap.set(card, { clearProps: 'opacity,transform' }))
+    }, outgoingCards.length ? '+=0.02' : 0);
+  }
 }
 
 function findProjectCard(projectId) {
@@ -469,7 +548,6 @@ function openCaseStudy(projectId, trigger) {
   if (!caseStudyModal) return;
   const card = findProjectCard(projectId);
   if (!card) return;
-  clearProjectPreview(activePreviewCard);
   populateCaseStudy(card);
   lastCaseStudyTrigger = trigger || document.activeElement;
   caseStudyModal.hidden = false;
@@ -524,7 +602,7 @@ function initPortfolioCards() {
     });
   });
 
-  setActiveFilter('all');
+  setActiveFilter('all', { animate: false });
 }
 
 function clearPortraitPreview(card) {
@@ -748,6 +826,134 @@ function initBtsTracks() {
   });
 }
 
+function initPortfolioGalleryMotion() {
+  if (!portfolioSection || !portfolioCards.length) return;
+
+  portfolioSection.classList.add('visible');
+
+  if (!hasGsap || prefersReducedMotion.matches) return;
+
+  const gsap = window.gsap;
+  if (hasScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
+
+  const portfolioIntro = portfolioSection.querySelector('.portfolio-intro');
+  const introHeading = portfolioIntro?.querySelector('.section-head > div');
+  const introDescription = portfolioIntro?.querySelector('.section-intro');
+  const introFilters = portfolioIntro ? Array.from(portfolioIntro.querySelectorAll('.filter-chip')) : [];
+  const portfolioGrid = portfolioSection.querySelector('.portfolio-grid');
+
+  if (portfolioIntro && hasScrollTrigger) {
+    const introTimeline = gsap.timeline({
+      defaults: { ease: 'power3.out' },
+      scrollTrigger: {
+        trigger: portfolioIntro,
+        start: 'top 82%',
+        once: true
+      }
+    });
+
+    if (introHeading) {
+      introTimeline.from(introHeading, {
+        y: 34,
+        autoAlpha: 0,
+        duration: 0.8
+      });
+    }
+
+    if (introDescription) {
+      introTimeline.from(introDescription, {
+        y: 26,
+        autoAlpha: 0,
+        duration: 0.7
+      }, '-=0.42');
+    }
+
+    if (introFilters.length) {
+      introTimeline.from(introFilters, {
+        y: 18,
+        autoAlpha: 0,
+        duration: 0.48,
+        stagger: 0.06
+      }, '-=0.28');
+    }
+
+    gsap.matchMedia().add('(min-width: 961px)', () => {
+      window.ScrollTrigger.create({
+        trigger: portfolioSection,
+        start: 'top top+=92',
+        end: () => `+=${Math.min(170, Math.max(120, (portfolioGrid?.offsetHeight || 0) * 0.18))}`,
+        pin: portfolioIntro,
+        pinSpacing: false,
+        scrub: false,
+        anticipatePin: 1
+      });
+    });
+  }
+
+  const cardsToReveal = portfolioCards.filter((card) => !card.hidden);
+  if (cardsToReveal.length && hasScrollTrigger) {
+    gsap.set(cardsToReveal, { autoAlpha: 0, y: 34, scale: 0.986 });
+  }
+
+  if (hasScrollTrigger) {
+    window.ScrollTrigger.batch(portfolioCards, {
+      start: 'top 88%',
+      once: true,
+      onEnter: (batch) => {
+        const revealBatch = batch.filter((card) => !card.hidden && !revealedPortfolioCards.has(card));
+        if (!revealBatch.length) return;
+        revealBatch.forEach((card) => revealedPortfolioCards.add(card));
+        gsap.to(revealBatch, {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.78,
+          stagger: 0.08,
+          ease: 'power3.out',
+          overwrite: 'auto',
+          clearProps: 'opacity,transform'
+        });
+      }
+    });
+  }
+
+  if (!isCoarsePointer) {
+    portfolioCards.forEach((card) => {
+      const poster = card.querySelector('.project-card-media img');
+      const overlay = card.querySelector('.project-card-sheen');
+      const badge = card.querySelector('.project-card-badge');
+      const title = card.querySelector('.project-card-copy h3');
+      const kicker = card.querySelector('.project-card-kicker');
+      const summary = card.querySelector('.project-card-copy p:last-child');
+
+      if (overlay) gsap.set(overlay, { opacity: 0.56 });
+
+      const enter = () => {
+        if (poster) gsap.to(poster, { scale: 1.055, duration: 0.7, ease: 'power3.out', overwrite: 'auto' });
+        if (overlay) gsap.to(overlay, { opacity: 0.9, duration: 0.45, ease: 'power2.out', overwrite: 'auto' });
+        if (badge) gsap.to(badge, { y: -5, duration: 0.45, ease: 'power2.out', overwrite: 'auto' });
+        if (title) gsap.to(title, { y: -2, color: '#ffffff', duration: 0.45, ease: 'power2.out', overwrite: 'auto' });
+        if (kicker) gsap.to(kicker, { y: -1, color: 'rgba(245, 241, 232, 0.92)', duration: 0.45, ease: 'power2.out', overwrite: 'auto' });
+        if (summary) gsap.to(summary, { color: 'rgba(245, 241, 232, 0.88)', duration: 0.45, ease: 'power2.out', overwrite: 'auto' });
+      };
+
+      const leave = () => {
+        if (poster) gsap.to(poster, { scale: 1.01, duration: 0.6, ease: 'power3.out', overwrite: 'auto' });
+        if (overlay) gsap.to(overlay, { opacity: 0.56, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+        if (badge) gsap.to(badge, { y: 0, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+        if (title) gsap.to(title, { y: 0, color: 'rgba(255, 255, 255, 0.96)', duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+        if (kicker) gsap.to(kicker, { y: 0, color: 'rgba(245, 241, 232, 0.72)', duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+        if (summary) gsap.to(summary, { color: 'rgba(220, 221, 225, 0.78)', duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+      };
+
+      card.addEventListener('pointerenter', enter);
+      card.addEventListener('pointerleave', leave);
+      card.addEventListener('focusin', enter);
+      card.addEventListener('focusout', leave);
+    });
+  }
+}
+
 function initSectionReveals() {
   if (!sectionReveals.length) return;
 
@@ -778,7 +984,7 @@ function initSectionReveals() {
     });
 
     gsap.utils.toArray('.section-reveal').forEach((section) => {
-      if (section.closest('.hero')) return;
+      if (section.closest('.hero') || section.id === 'portfolio') return;
       gsap.fromTo(
         section,
         { y: 48, autoAlpha: 0 },
@@ -798,22 +1004,6 @@ function initSectionReveals() {
         }
       );
     });
-
-    const portfolioGrid = document.querySelector('.portfolio-grid');
-    if (portfolioGrid && hasScrollTrigger) {
-      gsap.from('.project-card', {
-        y: 32,
-        autoAlpha: 0,
-        duration: 0.8,
-        stagger: 0.08,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: portfolioGrid,
-          start: 'top 78%',
-          once: true
-        }
-      });
-    }
 
     const btsFrames = document.querySelectorAll('.bts-frame');
     if (btsFrames.length && hasScrollTrigger) {
@@ -1046,6 +1236,7 @@ initTopbarScroll();
 initPlayButtons();
 initPortfolioCards();
 initPortfolioAutoPreviews();
+initPortfolioGalleryMotion();
 initPortraitStack();
 initBtsTracks();
 initInquiryForm();

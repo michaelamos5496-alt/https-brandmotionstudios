@@ -883,11 +883,20 @@ html[data-theme="light"] .theme-icon-moon {
   gap: clamp(1rem, 1.8vw, 1.35rem);
 }
 
+.portfolio-intro {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  gap: 1.15rem;
+  margin-bottom: 1.6rem;
+  padding-bottom: 0.4rem;
+  background: linear-gradient(180deg, var(--bg) 72%, rgba(0, 0, 0, 0));
+}
+
 .portfolio-filters {
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
-  margin-bottom: 1.6rem;
 }
 
 .filter-chip {
@@ -968,6 +977,7 @@ html[data-theme="light"] .theme-icon-moon {
   filter: saturate(0.94) brightness(0.9);
   transform: scale(1.01);
   transition: transform 0.8s ease, opacity 0.3s ease;
+  will-change: transform, opacity;
 }
 
 .project-card:hover .project-card-media img,
@@ -999,7 +1009,9 @@ html[data-theme="light"] .theme-icon-moon {
   inset: 0;
   z-index: 1;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 30%, transparent 64%, rgba(198, 167, 94, 0.24));
+  opacity: 0.56;
   pointer-events: none;
+  will-change: opacity;
 }
 
 .project-card-badge {
@@ -1016,6 +1028,7 @@ html[data-theme="light"] .theme-icon-moon {
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  will-change: transform;
 }
 
 .project-card-copy {
@@ -1044,6 +1057,7 @@ html[data-theme="light"] .theme-icon-moon {
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+  transition: color var(--transition-base);
 }
 
 .project-card-copy h3 {
@@ -1051,6 +1065,7 @@ html[data-theme="light"] .theme-icon-moon {
   font-size: clamp(1.35rem, 2vw, 2.15rem);
   line-height: 1;
   letter-spacing: -0.04em;
+  transition: color var(--transition-base);
 }
 
 .project-card-copy p:last-child {
@@ -1058,6 +1073,7 @@ html[data-theme="light"] .theme-icon-moon {
   max-width: 28rem;
   color: var(--text-on-media-muted);
   font-size: 0.96rem;
+  transition: color var(--transition-base);
 }
 
 .case-studies .shell,
