@@ -521,15 +521,23 @@ html[data-theme="light"] .theme-icon-moon {
   inset: 0;
 }
 
-.hero-media iframe {
+.hero-media iframe,
+.hero-media img {
   position: absolute;
   top: 50%;
   left: 50%;
   width: max(100vw, 177.78vh);
   height: max(56.25vw, 100vh);
   transform: translate(-50%, -50%) scale(1.02);
+}
+
+.hero-media iframe {
   border: 0;
   pointer-events: none;
+}
+
+.hero-media img {
+  object-fit: cover;
 }
 
 .hero-scrim {
