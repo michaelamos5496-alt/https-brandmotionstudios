@@ -1003,8 +1003,8 @@ html[data-theme="light"] .theme-icon-moon {
 
 .project-card-badge {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  left: clamp(1rem, 2vw, 1.35rem);
+  bottom: clamp(1rem, 2vw, 1.35rem);
   z-index: 3;
   padding: 0.45rem 0.7rem;
   border-radius: 999px;
@@ -1024,6 +1024,7 @@ html[data-theme="light"] .theme-icon-moon {
   gap: 0.8rem;
   margin-top: auto;
   padding: clamp(1.2rem, 2vw, 1.6rem);
+  padding-bottom: clamp(4.2rem, 5vw, 4.9rem);
   color: var(--text-on-media);
   background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.86));
 }
