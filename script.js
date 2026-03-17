@@ -633,10 +633,30 @@ function initBtsTracks() {
     track.dataset.duplicated = 'true';
   });
 
-  document.querySelectorAll('.bts-frame img').forEach((image) => {
+  const fallbackSources = [
+    'https://images.pixieset.com/821999501/c90e81d0bd40820b5ccb7352a8839d72-xxlarge.jpg',
+    'https://images.pixieset.com/821999501/6559b6effb152e3782468d5d8bef08bb-xxlarge.jpg',
+    'https://i.ytimg.com/vi/o_P-qo9fI00/hqdefault.jpg',
+    'https://i.ytimg.com/vi/ASQsCTBuB14/hqdefault.jpg',
+    'https://i.ytimg.com/vi/5_SDB5Ozl20/hqdefault.jpg',
+    'https://vumbnail.com/834062800.jpg',
+    'https://vumbnail.com/1123537845.jpg',
+    'https://vumbnail.com/1164509809.jpg'
+  ];
+
+  document.querySelectorAll('.bts-frame img').forEach((image, index) => {
+    image.referrerPolicy = 'no-referrer';
+    image.dataset.fallbackIndex = String(index);
     image.addEventListener('error', () => {
-      const frame = image.closest('.bts-frame');
-      if (frame) frame.style.display = 'none';
+      if (image.dataset.fallbackApplied === 'true') {
+        const frame = image.closest('.bts-frame');
+        if (frame) frame.style.display = 'none';
+        return;
+      }
+
+      const fallbackIndex = Number(image.dataset.fallbackIndex || 0);
+      image.dataset.fallbackApplied = 'true';
+      image.src = fallbackSources[fallbackIndex % fallbackSources.length];
     });
   });
 }
