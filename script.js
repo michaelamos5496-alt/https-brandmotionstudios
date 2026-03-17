@@ -867,7 +867,7 @@ function initHeroMotion() {
   const gsap = window.gsap;
   if (hasScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
 
-  gsap.set([heroCopy, heroScroll].filter(Boolean), {
+  gsap.set([heroScroll].filter(Boolean), {
     autoAlpha: 0,
     y: 0
   });
