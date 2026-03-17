@@ -1334,12 +1334,13 @@ html[data-theme="light"] .theme-icon-moon {
   display: flex;
   gap: 1rem;
   width: max-content;
-  animation: marquee 46s linear infinite;
+  animation: marquee 64s linear infinite;
+  will-change: transform;
 }
 
 .bts-track--reverse {
   animation-direction: reverse;
-  animation-duration: 54s;
+  animation-duration: 76s;
 }
 
 .bts-track:hover {
@@ -1357,6 +1358,7 @@ html[data-theme="light"] .theme-icon-moon {
 }
 
 .bts-frame img {
+  display: block;
   object-fit: contain;
   background: #111;
 }

@@ -799,20 +799,27 @@ function initBtsTracks() {
     if (track.dataset.duplicated === 'true') return;
     const items = Array.from(track.children);
     items.forEach((item) => {
-      track.append(item.cloneNode(true));
+      const clone = item.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      clone.querySelectorAll('img').forEach((img) => {
+        img.alt = '';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+      });
+      track.append(clone);
     });
     track.dataset.duplicated = 'true';
   });
 
   const fallbackSources = [
-    'https://drive.google.com/thumbnail?id=1wFOqZziPPigdY1DwMJLKRPv6eYCdVMoK&sz=w1600',
-    'https://drive.google.com/thumbnail?id=1NIxEU31tkqn3pJG2qN1USAL2FbxbdgVk&sz=w1600',
-    'https://drive.google.com/thumbnail?id=1nV78iG50IJt8-OziWIUeZgqVAQ-cOaTe&sz=w1600',
-    'https://drive.google.com/thumbnail?id=176exgHMKfAWhNQIqDDXd6vUIb4Kbgqbo&sz=w1600',
-    'https://drive.google.com/thumbnail?id=1eYBh9xzX_Sqw9F2j4roupoRuS66FBshC&sz=w1600',
-    'https://drive.google.com/thumbnail?id=1FWsGSh2Rr8Ytks1aD_AOTAkFKsVUuuyS&sz=w1600',
-    'https://drive.google.com/thumbnail?id=1ZeHIWvyk_Tx3XGl0zGSqMuuadx0FX5jR&sz=w1600',
-    'https://drive.google.com/thumbnail?id=1eVGVVDzvu9ApOpVY1KLvHWTdoa80WJ_8&sz=w1600'
+    'assets/bts/DSCF0096.jpg',
+    'assets/bts/DSCF0097.jpg',
+    'assets/bts/DSCF0099.jpg',
+    'assets/bts/DSCF0105.jpg',
+    'assets/bts/DSCF0106.jpg',
+    'assets/bts/DSCF0107.jpg',
+    'assets/bts/DSCF0109.jpg',
+    'assets/bts/DSCF0112.jpg'
   ];
 
   document.querySelectorAll('.bts-frame img').forEach((image, index) => {
