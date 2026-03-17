@@ -415,17 +415,6 @@ function initPortfolioCards() {
   portfolioCards.forEach((card) => {
     card.setAttribute('role', 'button');
     card.setAttribute('aria-label', `${card.dataset.title || 'Project'}. Open case study.`);
-
-    card.addEventListener('mouseenter', () => mountProjectPreview(card));
-    card.addEventListener('mouseleave', () => scheduleProjectPreviewClear(card));
-    card.addEventListener('focusin', () => {
-      card.classList.add('is-focused');
-      mountProjectPreview(card);
-    });
-    card.addEventListener('focusout', () => {
-      card.classList.remove('is-focused');
-      scheduleProjectPreviewClear(card);
-    });
     card.addEventListener('click', () => openCaseStudy(card.dataset.projectId, card));
     card.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' || event.key === ' ') {
