@@ -986,7 +986,7 @@ html[data-theme="light"] .theme-icon-moon {
 
 .project-card.has-preview .project-card-media img,
 .portrait-card.has-preview img {
-  opacity: 0.16;
+  opacity: 0;
 }
 
 .project-card-sheen {

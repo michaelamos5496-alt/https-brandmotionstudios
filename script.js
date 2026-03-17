@@ -48,14 +48,13 @@ const projectLocationSelect = document.getElementById('projectLocationSelect');
 const phoneInput = document.getElementById('phoneInput');
 const themeStorageKey = 'bms-theme';
 let activeFilter = 'all';
-let activePreviewCard = null;
-let previewLeaveTimer = 0;
 let activeCaseStudyCard = null;
 let lastCaseStudyTrigger = null;
 let portraitActiveIndex = 0;
 let portraitInView = false;
 let portraitPreviewCard = null;
 let lastModalTrigger = null;
+let projectPreviewObserver = null;
 
 function readStoredTheme() {
   try {
@@ -294,16 +293,12 @@ function clearProjectPreview(card) {
   const preview = card.querySelector('.project-card-preview');
   if (preview) preview.remove();
   card.classList.remove('has-preview');
-  if (activePreviewCard === card) activePreviewCard = null;
 }
 
 function mountProjectPreview(card) {
-  if (!card || isCoarsePointer || prefersReducedMotion.matches) return;
+  if (!card || prefersReducedMotion.matches) return;
   if (card.hidden || card.classList.contains('is-hidden')) return;
-  window.clearTimeout(previewLeaveTimer);
-  if (activePreviewCard && activePreviewCard !== card) clearProjectPreview(activePreviewCard);
   if (card.querySelector('.project-card-preview')) {
-    activePreviewCard = card;
     card.classList.add('has-preview');
     return;
   }
@@ -315,12 +310,64 @@ function mountProjectPreview(card) {
   previewShell.append(createIframe(previewUrl, `${card.dataset.title || 'Project'} preview`));
   media.append(previewShell);
   card.classList.add('has-preview');
-  activePreviewCard = card;
 }
 
-function scheduleProjectPreviewClear(card) {
-  window.clearTimeout(previewLeaveTimer);
-  previewLeaveTimer = window.setTimeout(() => clearProjectPreview(card), 110);
+function syncPortfolioAutoPreviews() {
+  portfolioCards.forEach((card) => {
+    if (card.hidden || card.classList.contains('is-hidden')) {
+      clearProjectPreview(card);
+      return;
+    }
+
+    const rect = card.getBoundingClientRect();
+    const visible =
+      rect.bottom > 0 &&
+      rect.right > 0 &&
+      rect.top < window.innerHeight &&
+      rect.left < window.innerWidth;
+
+    if (visible) {
+      mountProjectPreview(card);
+    } else {
+      clearProjectPreview(card);
+    }
+  });
+}
+
+function initPortfolioAutoPreviews() {
+  if (!portfolioCards.length || prefersReducedMotion.matches) return;
+
+  if ('IntersectionObserver' in window) {
+    projectPreviewObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const card = entry.target;
+          if (!(card instanceof HTMLElement)) return;
+          if (card.hidden || card.classList.contains('is-hidden')) {
+            clearProjectPreview(card);
+            return;
+          }
+          if (entry.isIntersecting && entry.intersectionRatio > 0.22) {
+            mountProjectPreview(card);
+          } else {
+            clearProjectPreview(card);
+          }
+        });
+      },
+      {
+        threshold: [0, 0.22, 0.5],
+        rootMargin: '10% 0px 10% 0px'
+      }
+    );
+
+    portfolioCards.forEach((card) => projectPreviewObserver.observe(card));
+    return;
+  }
+
+  const onViewportChange = () => syncPortfolioAutoPreviews();
+  window.addEventListener('scroll', onViewportChange, { passive: true });
+  window.addEventListener('resize', onViewportChange);
+  syncPortfolioAutoPreviews();
 }
 
 function setActiveFilter(filter) {
@@ -336,6 +383,10 @@ function setActiveFilter(filter) {
     card.hidden = !shouldShow;
     card.classList.toggle('is-hidden', !shouldShow);
     if (!shouldShow) clearProjectPreview(card);
+  });
+
+  requestAnimationFrame(() => {
+    syncPortfolioAutoPreviews();
   });
 }
 
@@ -905,6 +956,7 @@ initMobileMenu();
 initTopbarScroll();
 initPlayButtons();
 initPortfolioCards();
+initPortfolioAutoPreviews();
 initPortraitStack();
 initBtsTracks();
 initInquiryForm();
