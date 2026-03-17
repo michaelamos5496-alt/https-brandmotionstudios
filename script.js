@@ -547,6 +547,7 @@ function mountPortraitPreview(card) {
   if (!previewUrl) return;
   const previewShell = document.createElement('div');
   previewShell.className = 'portrait-card-preview';
+  previewShell.setAttribute('aria-hidden', 'true');
   const iframe = createIframe('', `${card.dataset.title || 'Portrait work'} preview`);
   previewShell.append(iframe);
   card.append(previewShell);
@@ -608,7 +609,7 @@ function updatePortraitStack() {
       const latestActiveCard = portraitCards[portraitActiveIndex];
       if (!latestActiveCard || !portraitInView) return;
       mountPortraitPreview(latestActiveCard);
-    }, 220);
+    }, 80);
   }
 }
 

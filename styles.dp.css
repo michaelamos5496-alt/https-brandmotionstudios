@@ -945,7 +945,8 @@ html[data-theme="light"] .theme-icon-moon {
 }
 
 .project-card-media,
-.project-card-preview {
+.project-card-preview,
+.portrait-card-preview {
   position: absolute;
   inset: 0;
 }
