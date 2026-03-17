@@ -805,14 +805,14 @@ function initBtsTracks() {
   });
 
   const fallbackSources = [
-    'https://images.pixieset.com/821999501/c90e81d0bd40820b5ccb7352a8839d72-xxlarge.jpg',
-    'https://images.pixieset.com/821999501/6559b6effb152e3782468d5d8bef08bb-xxlarge.jpg',
-    'https://i.ytimg.com/vi/o_P-qo9fI00/hqdefault.jpg',
-    'https://i.ytimg.com/vi/ASQsCTBuB14/hqdefault.jpg',
-    'https://i.ytimg.com/vi/5_SDB5Ozl20/hqdefault.jpg',
-    'https://vumbnail.com/834062800.jpg',
-    'https://vumbnail.com/1123537845.jpg',
-    'https://vumbnail.com/1164509809.jpg'
+    'https://drive.google.com/thumbnail?id=1wFOqZziPPigdY1DwMJLKRPv6eYCdVMoK&sz=w1600',
+    'https://drive.google.com/thumbnail?id=1NIxEU31tkqn3pJG2qN1USAL2FbxbdgVk&sz=w1600',
+    'https://drive.google.com/thumbnail?id=1nV78iG50IJt8-OziWIUeZgqVAQ-cOaTe&sz=w1600',
+    'https://drive.google.com/thumbnail?id=176exgHMKfAWhNQIqDDXd6vUIb4Kbgqbo&sz=w1600',
+    'https://drive.google.com/thumbnail?id=1eYBh9xzX_Sqw9F2j4roupoRuS66FBshC&sz=w1600',
+    'https://drive.google.com/thumbnail?id=1FWsGSh2Rr8Ytks1aD_AOTAkFKsVUuuyS&sz=w1600',
+    'https://drive.google.com/thumbnail?id=1ZeHIWvyk_Tx3XGl0zGSqMuuadx0FX5jR&sz=w1600',
+    'https://drive.google.com/thumbnail?id=1eVGVVDzvu9ApOpVY1KLvHWTdoa80WJ_8&sz=w1600'
   ];
 
   document.querySelectorAll('.bts-frame img').forEach((image, index) => {
