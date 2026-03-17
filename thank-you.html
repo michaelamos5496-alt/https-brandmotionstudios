@@ -5,21 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Thank You | BrandMotion Studios</title>
     <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#090909" />
     <link rel="canonical" href="https://www.brandmotionstudios.com/thank-you.html" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="apple-touch-icon" href="assets/favicon.svg" />
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const storageKey = 'bms-theme';
+        let storedTheme = null;
+        try {
+          storedTheme = localStorage.getItem(storageKey);
+        } catch {}
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const initialTheme =
+          storedTheme === 'light' || storedTheme === 'dark'
+            ? storedTheme
+            : systemDark
+              ? 'dark'
+              : 'light';
+        root.setAttribute('data-theme', initialTheme);
+        root.style.colorScheme = initialTheme;
+      })();
+    </script>
+    <link rel="stylesheet" href="styles.dp.css?v=20260316b" />
   </head>
   <body>
-    <main style="width:min(900px,calc(100% - 2rem));margin:0 auto;min-height:100vh;display:grid;place-items:center;">
-      <section class="section-reveal visible" style="width:100%;border:1px solid #242424;background:#0f0f0f;padding:2rem;">
-        <p class="kicker">Inquiry Received</p>
-        <h1 style="margin:0 0 0.8rem;font-size:clamp(1.8rem,6vw,3.4rem);line-height:1.02;text-transform:uppercase;">
-          Thank You.
-        </h1>
-        <p style="margin:0 0 1.1rem;color:#cecece;line-height:1.6;">
-          Your project inquiry has been submitted successfully. We will contact you shortly.
-        </p>
-        <a class="control-btn" href="/">Back To Website</a>
+    <header class="topbar is-scrolled">
+      <a class="brand" href="index.html#home">BrandMotion Studios</a>
+      <nav class="menu" aria-label="Primary">
+        <a href="index.html#portfolio">Portfolio</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <div class="topbar-actions">
+        <a class="nav-cta" href="project-inquiry.html">Start a Project</a>
+        <button
+          class="theme-toggle theme-toggle-desktop"
+          type="button"
+          data-theme-toggle
+          aria-label="Switch to light theme"
+          aria-pressed="false"
+        >
+          <span class="theme-toggle-track" aria-hidden="true">
+            <span class="theme-toggle-thumb">
+              <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" focusable="false">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path
+                  d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+                ></path>
+              </svg>
+              <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" focusable="false">
+                <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"></path>
+              </svg>
+            </span>
+          </span>
+          <span class="sr-only">Toggle theme</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="thank-you-page">
+      <section class="shell thank-you-shell">
+        <div class="thank-you-card section-reveal visible">
+          <p class="eyebrow">Inquiry Received</p>
+          <h1>Thanks. Your brief is in.</h1>
+          <p>
+            BrandMotion Studios has received your project intake successfully. The next step is a
+            review of the scope, timeline, creative direction, and delivery needs so the response is
+            specific to your project.
+          </p>
+          <p>
+            If the brief is a fit, you’ll get a follow-up with next steps, availability, and how we
+            should move into production planning.
+          </p>
+          <div class="thank-you-actions">
+            <a class="control-btn" href="index.html#portfolio">Return to Portfolio</a>
+            <a class="control-btn control-btn--ghost" href="project-inquiry.html">Send Another Inquiry</a>
+          </div>
+          <p class="thank-you-note">
+            For urgent requests, email
+            <a href="mailto:brandmotionstudios5496@gmail.com">brandmotionstudios5496@gmail.com</a>
+            or message
+            <a href="https://wa.me/233541479680" target="_blank" rel="noopener noreferrer">WhatsApp</a>.
+          </p>
+        </div>
       </section>
     </main>
+
+    <footer class="footer">
+      <p>Copyright 2026 BrandMotion Studios</p>
+      <a href="index.html#home">Back to home</a>
+    </footer>
+
+    <script src="script.js?v=20260316b"></script>
   </body>
 </html>

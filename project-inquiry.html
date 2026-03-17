@@ -6,14 +6,14 @@
     <title>Start A Project | BrandMotion Studios</title>
     <meta
       name="description"
-      content="Project inquiry form for BrandMotion Studios cinematography and visual storytelling services."
+      content="Premium project intake for BrandMotion Studios wedding films, documentaries, fashion campaigns, brand films, and post-production work."
     />
-    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="theme-color" content="#090909" />
     <link rel="canonical" href="https://www.brandmotionstudios.com/project-inquiry.html" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
@@ -21,34 +21,35 @@
     <script>
       (() => {
         const root = document.documentElement;
-        const storageKey = "bms-theme";
+        const storageKey = 'bms-theme';
         let storedTheme = null;
         try {
           storedTheme = localStorage.getItem(storageKey);
         } catch {}
-        const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const initialTheme =
-          storedTheme === "light" || storedTheme === "dark"
+          storedTheme === 'light' || storedTheme === 'dark'
             ? storedTheme
             : systemDark
-              ? "dark"
-              : "light";
-        root.setAttribute("data-theme", initialTheme);
+              ? 'dark'
+              : 'light';
+        root.setAttribute('data-theme', initialTheme);
         root.style.colorScheme = initialTheme;
       })();
     </script>
-    <link rel="stylesheet" href="styles.dp.css?v=20260306e" />
+    <link rel="stylesheet" href="styles.dp.css?v=20260316b" />
   </head>
   <body>
     <header class="topbar">
       <a class="brand" href="index.html#home">BrandMotion Studios</a>
       <nav class="menu" aria-label="Primary">
+        <a href="index.html#featured">Featured</a>
         <a href="index.html#portfolio">Portfolio</a>
-        <a href="index.html#bts">BTS</a>
         <a href="index.html#about">About</a>
         <a href="index.html#contact">Contact</a>
       </nav>
       <div class="topbar-actions">
+        <a class="nav-cta" href="index.html#portfolio">View Work</a>
         <button
           class="theme-toggle theme-toggle-desktop"
           type="button"
@@ -85,11 +86,12 @@
         </button>
       </div>
     </header>
+
     <div class="mobile-menu-backdrop" id="mobileMenuBackdrop" hidden></div>
     <aside class="mobile-menu" id="mobileMenu" hidden>
       <nav class="mobile-menu-links" aria-label="Mobile primary">
+        <a href="index.html#featured">Featured</a>
         <a href="index.html#portfolio">Portfolio</a>
-        <a href="index.html#bts">BTS</a>
         <a href="index.html#about">About</a>
         <a href="index.html#contact">Contact</a>
       </nav>
@@ -117,93 +119,172 @@
       </button>
     </aside>
 
-    <main id="project-inquiry-page">
-      <section id="inquiry" class="inquiry section-reveal visible">
-        <div class="inquiry-head section-top-center">
-          <p class="kicker">Start A Project</p>
-          <h2>Tell us what you need, we will respond with next steps.</h2>
+    <main id="project-inquiry-page" class="inquiry-page">
+      <section class="shell inquiry-shell">
+        <div class="inquiry-head section-reveal visible">
+          <p class="eyebrow">Project Intake</p>
+          <h1>Bring the vision. We’ll shape the production path.</h1>
+          <p>
+            This intake is built for premium projects that need more than a quick quote. Share the
+            brief, the creative goal, the timeline, and the location so BrandMotion Studios can
+            respond with the right next step.
+          </p>
         </div>
-        <form
-          class="inquiry-form"
-          name="project-inquiry"
-          method="POST"
-          action="https://formsubmit.co/brandmotionstudios5496@gmail.com"
-        >
-          <input type="hidden" name="_subject" value="New Project Inquiry - BrandMotion Studios" />
-          <input type="hidden" name="_next" value="https://brandmotionstudios.com/thank-you.html" />
-          <input type="hidden" name="_captcha" value="false" />
-          <label>
-            Full Name
-            <input type="text" name="name" required />
-          </label>
-          <label>
-            Email
-            <input type="email" name="email" required />
-          </label>
-          <label>
-            Project Type
-            <select name="project_type" required>
-              <option value="">Select project type</option>
-              <option>Wedding Film</option>
-              <option>Documentary</option>
-              <option>Fashion Campaign</option>
-              <option>Brand Visuals</option>
-              <option>Architecture / Interior Decor</option>
-              <option>Post-Production</option>
-            </select>
-          </label>
-          <label>
-            How Did You Hear About Us?
-            <select name="referral_source" required>
-              <option value="">Select an option</option>
-              <option>Instagram</option>
-              <option>LinkedIn</option>
-              <option>YouTube</option>
-              <option>Google Search</option>
-              <option>Referral</option>
-              <option>Returning Client</option>
-              <option>Other</option>
-            </select>
-          </label>
-          <label>
-            Country
-            <select id="countrySelect" name="country" required>
-              <option value="">Select country</option>
-            </select>
-          </label>
-          <label>
-            Phone Number
-            <input id="phoneInput" type="tel" name="phone_number" placeholder="+..." required />
-          </label>
-          <label>
-            Project Location
-            <select id="projectLocationSelect" name="project_location" required disabled>
-              <option value="">Select country first</option>
-            </select>
-          </label>
-          <label>
-            Preferred Shoot Date
-            <input type="date" name="preferred_shoot_date" required />
-          </label>
-          <label class="full">
-            Project Brief
-            <textarea
-              name="brief"
-              rows="5"
-              placeholder="Share your goals, timeline, location, and deliverables."
-              required
-            ></textarea>
-          </label>
-          <button class="control-btn full" type="submit">Send Inquiry</button>
-        </form>
+
+        <div class="inquiry-layout">
+          <aside class="inquiry-panel section-reveal visible">
+            <p class="inquiry-panel-label">What happens next</p>
+            <div class="inquiry-highlights">
+              <article class="inquiry-highlight">
+                <h3>01. We review the brief</h3>
+                <p>We look at scope, timing, goals, and the production format that best fits the film.</p>
+              </article>
+              <article class="inquiry-highlight">
+                <h3>02. We reply with direction</h3>
+                <p>You’ll get a response with next-step clarity, availability, and how we should structure the project.</p>
+              </article>
+              <article class="inquiry-highlight">
+                <h3>03. We move into pre-production</h3>
+                <p>Once aligned, we shape the creative treatment, logistics, and final production pathway.</p>
+              </article>
+            </div>
+            <div class="contact-points">
+              <a href="mailto:brandmotionstudios5496@gmail.com">brandmotionstudios5496@gmail.com</a>
+              <a href="https://wa.me/233541479680" target="_blank" rel="noopener noreferrer">WhatsApp only: +233 54 147 9680</a>
+            </div>
+          </aside>
+
+          <form
+            class="inquiry-form section-reveal visible"
+            name="project-inquiry"
+            method="POST"
+            action="https://formsubmit.co/brandmotionstudios5496@gmail.com"
+          >
+            <input type="hidden" name="_subject" value="New Project Inquiry - BrandMotion Studios" />
+            <input type="hidden" name="_next" value="https://brandmotionstudios.com/thank-you.html" />
+            <input type="hidden" name="_captcha" value="false" />
+
+            <label>
+              Full Name
+              <input type="text" name="name" required />
+            </label>
+
+            <label>
+              Email
+              <input type="email" name="email" required />
+            </label>
+
+            <label class="field-span-2">
+              Project Type
+              <select name="project_type" required>
+                <option value="">Select project type</option>
+                <option>Wedding Film</option>
+                <option>Documentary</option>
+                <option>Fashion Campaign</option>
+                <option>Brand Commercial</option>
+                <option>Cinematography</option>
+                <option>Architecture / Interior Decor</option>
+                <option>Post Production</option>
+              </select>
+            </label>
+
+            <label>
+              Budget Range
+              <select name="budget_range" required>
+                <option value="">Select budget range</option>
+                <option>Under GHS 10,000</option>
+                <option>GHS 10,000 - 25,000</option>
+                <option>GHS 25,000 - 60,000</option>
+                <option>GHS 60,000+</option>
+                <option>Let’s discuss</option>
+              </select>
+            </label>
+
+            <label>
+              Timeline
+              <select name="timeline" required>
+                <option value="">Select timeline</option>
+                <option>ASAP</option>
+                <option>Within 2 - 4 weeks</option>
+                <option>Within 1 - 2 months</option>
+                <option>3+ months out</option>
+                <option>Flexible</option>
+              </select>
+            </label>
+
+            <label>
+              Country
+              <select id="countrySelect" name="country" required>
+                <option value="">Select country</option>
+              </select>
+            </label>
+
+            <label>
+              Phone Number
+              <input id="phoneInput" type="tel" name="phone_number" placeholder="+..." required />
+            </label>
+
+            <label class="field-span-2">
+              Project Location
+              <select id="projectLocationSelect" name="project_location" required disabled>
+                <option value="">Select country first</option>
+              </select>
+            </label>
+
+            <label>
+              Preferred Shoot Date
+              <input type="date" name="preferred_shoot_date" />
+            </label>
+
+            <label>
+              How Did You Hear About Us?
+              <select name="referral_source" required>
+                <option value="">Select an option</option>
+                <option>Instagram</option>
+                <option>LinkedIn</option>
+                <option>YouTube</option>
+                <option>Google Search</option>
+                <option>Referral</option>
+                <option>Returning Client</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <label class="field-span-2">
+              Creative Goals
+              <textarea
+                name="creative_goals"
+                rows="5"
+                placeholder="What should the film make people feel, remember, or do?"
+                required
+              ></textarea>
+            </label>
+
+            <label class="field-span-2">
+              Project Brief
+              <textarea
+                name="brief"
+                rows="6"
+                placeholder="Share the story, deliverables, key dates, references, and any production notes."
+                required
+              ></textarea>
+            </label>
+
+            <button class="control-btn field-span-2" type="submit">Submit Project Inquiry</button>
+            <p class="field-note field-span-2">
+              Every inquiry is sent directly to BrandMotion Studios at
+              <strong>brandmotionstudios5496@gmail.com</strong>.
+            </p>
+          </form>
+        </div>
       </section>
     </main>
 
     <footer class="footer">
-      <p>Copyright 2026</p>
+      <p>Copyright 2026 BrandMotion Studios</p>
       <a href="index.html#home">Back to home</a>
     </footer>
 
-    <script src="script.js?v=20260306a"></script>
+    <script src="script.js?v=20260316b"></script>
   </body>
 </html>
