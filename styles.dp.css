@@ -829,9 +829,11 @@ html[data-theme="light"] .theme-icon-moon {
 .player-shell video,
 .project-card-preview iframe,
 .portrait-card-preview iframe {
+  display: block;
   width: 100%;
   height: 100%;
   border: 0;
+  transform: translateZ(0);
 }
 
 .featured-stage iframe,
@@ -976,7 +978,9 @@ html[data-theme="light"] .theme-icon-moon {
 .portrait-card-preview {
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.28s ease;
+  will-change: opacity;
+  transform: translateZ(0);
+  transition: opacity 0.22s ease;
 }
 
 .project-card.has-preview .project-card-preview,
@@ -1139,6 +1143,7 @@ html[data-theme="light"] .theme-icon-moon {
   align-items: center;
   min-height: clamp(560px, 72vw, 820px);
   gap: clamp(1rem, 3vw, 2.5rem);
+  overflow: clip;
 }
 
 .portrait-detail {
@@ -1208,9 +1213,12 @@ html[data-theme="light"] .theme-icon-moon {
   overflow: hidden;
   border: 1px solid var(--line-strong);
   background: #000;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
   cursor: pointer;
-  will-change: transform;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  contain: layout paint style;
   transform:
     translate3d(var(--portrait-x, 0), var(--portrait-y, 0), 0)
     scale(var(--portrait-scale, 1))
@@ -1218,14 +1226,15 @@ html[data-theme="light"] .theme-icon-moon {
   opacity: var(--portrait-opacity, 1);
   z-index: var(--portrait-z, 1);
   transition:
-    transform var(--transition-slow),
-    opacity var(--transition-base),
+    transform 0.48s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.24s ease,
     border-color var(--transition-base),
     box-shadow var(--transition-base);
 }
 
 .portrait-card.is-active {
   border-color: var(--accent-line);
+  box-shadow: var(--shadow-lg);
 }
 
 .portrait-card img {
@@ -1876,6 +1885,7 @@ html[data-theme="light"] .theme-icon-moon {
     grid-template-columns: 1fr;
     min-height: auto;
     gap: 1.5rem;
+    justify-items: center;
   }
 
   .portrait-detail {
@@ -1887,7 +1897,7 @@ html[data-theme="light"] .theme-icon-moon {
   .portrait-card {
     grid-column: 1;
     grid-row: 2;
-    width: min(72vw, 320px);
+    width: min(64vw, 300px);
   }
 
   .featured-copy h3,

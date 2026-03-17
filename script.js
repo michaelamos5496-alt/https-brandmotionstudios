@@ -55,6 +55,10 @@ let portraitInView = false;
 let portraitPreviewCard = null;
 let lastModalTrigger = null;
 let projectPreviewObserver = null;
+let activePortfolioPreviewCard = null;
+let portfolioPreviewSyncFrame = 0;
+let portraitPreviewMountTimer = 0;
+const portfolioPreviewVisibility = new Map();
 
 function readStoredTheme() {
   try {
@@ -175,14 +179,22 @@ function initTopbarScroll() {
 
 function createIframe(url, title) {
   const iframe = document.createElement('iframe');
-  iframe.src = url;
+  if (url) iframe.src = url;
   iframe.title = title;
   iframe.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media; clipboard-write; web-share';
   iframe.allowFullscreen = true;
-  iframe.loading = 'lazy';
+  iframe.loading = 'eager';
   iframe.referrerPolicy = 'strict-origin-when-cross-origin';
   iframe.tabIndex = -1;
   return iframe;
+}
+
+function deferIframeSource(iframe, url) {
+  if (!iframe || !url) return;
+  requestAnimationFrame(() => {
+    if (!iframe.isConnected) return;
+    iframe.src = url;
+  });
 }
 
 function buildPlayerUrl(url) {
@@ -293,6 +305,7 @@ function clearProjectPreview(card) {
   const preview = card.querySelector('.project-card-preview');
   if (preview) preview.remove();
   card.classList.remove('has-preview');
+  if (activePortfolioPreviewCard === card) activePortfolioPreviewCard = null;
 }
 
 function mountProjectPreview(card) {
@@ -307,30 +320,69 @@ function mountProjectPreview(card) {
   if (!media || !previewUrl) return;
   const previewShell = document.createElement('div');
   previewShell.className = 'project-card-preview';
-  previewShell.append(createIframe(previewUrl, `${card.dataset.title || 'Project'} preview`));
+  const iframe = createIframe('', `${card.dataset.title || 'Project'} preview`);
+  previewShell.append(iframe);
   media.append(previewShell);
   card.classList.add('has-preview');
+  deferIframeSource(iframe, previewUrl);
+}
+
+function setActivePortfolioPreview(card) {
+  if (activePortfolioPreviewCard === card) {
+    if (card) mountProjectPreview(card);
+    return;
+  }
+
+  portfolioCards.forEach((item) => {
+    if (item !== card) clearProjectPreview(item);
+  });
+
+  activePortfolioPreviewCard = card || null;
+  if (card) mountProjectPreview(card);
+}
+
+function getBestVisiblePortfolioCard() {
+  let bestCard = null;
+  let bestRatio = 0;
+
+  portfolioCards.forEach((card) => {
+    if (card.hidden || card.classList.contains('is-hidden')) return;
+    const ratio = Number(portfolioPreviewVisibility.get(card) || 0);
+    if (ratio > bestRatio) {
+      bestRatio = ratio;
+      bestCard = card;
+    }
+  });
+
+  if (bestCard && bestRatio >= 0.24) return bestCard;
+
+  let bestViewportCard = null;
+  let bestViewportScore = 0;
+  portfolioCards.forEach((card) => {
+    if (card.hidden || card.classList.contains('is-hidden')) return;
+    const rect = card.getBoundingClientRect();
+    const visibleHeight = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+    const visibleWidth = Math.max(0, Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0));
+    const area = rect.width * rect.height || 1;
+    const score = (visibleHeight * visibleWidth) / area;
+    if (score > bestViewportScore) {
+      bestViewportScore = score;
+      bestViewportCard = card;
+    }
+  });
+
+  return bestViewportScore >= 0.24 ? bestViewportCard : null;
 }
 
 function syncPortfolioAutoPreviews() {
-  portfolioCards.forEach((card) => {
-    if (card.hidden || card.classList.contains('is-hidden')) {
-      clearProjectPreview(card);
-      return;
-    }
+  setActivePortfolioPreview(getBestVisiblePortfolioCard());
+}
 
-    const rect = card.getBoundingClientRect();
-    const visible =
-      rect.bottom > 0 &&
-      rect.right > 0 &&
-      rect.top < window.innerHeight &&
-      rect.left < window.innerWidth;
-
-    if (visible) {
-      mountProjectPreview(card);
-    } else {
-      clearProjectPreview(card);
-    }
+function requestPortfolioPreviewSync() {
+  if (portfolioPreviewSyncFrame) return;
+  portfolioPreviewSyncFrame = window.requestAnimationFrame(() => {
+    portfolioPreviewSyncFrame = 0;
+    syncPortfolioAutoPreviews();
   });
 }
 
@@ -344,15 +396,13 @@ function initPortfolioAutoPreviews() {
           const card = entry.target;
           if (!(card instanceof HTMLElement)) return;
           if (card.hidden || card.classList.contains('is-hidden')) {
+            portfolioPreviewVisibility.set(card, 0);
             clearProjectPreview(card);
             return;
           }
-          if (entry.isIntersecting && entry.intersectionRatio > 0.22) {
-            mountProjectPreview(card);
-          } else {
-            clearProjectPreview(card);
-          }
+          portfolioPreviewVisibility.set(card, entry.isIntersecting ? entry.intersectionRatio : 0);
         });
+        requestPortfolioPreviewSync();
       },
       {
         threshold: [0, 0.22, 0.5],
@@ -361,13 +411,22 @@ function initPortfolioAutoPreviews() {
     );
 
     portfolioCards.forEach((card) => projectPreviewObserver.observe(card));
+    window.addEventListener('scroll', requestPortfolioPreviewSync, { passive: true });
+    window.addEventListener('resize', requestPortfolioPreviewSync);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        setActivePortfolioPreview(null);
+        return;
+      }
+      requestPortfolioPreviewSync();
+    });
+    requestPortfolioPreviewSync();
     return;
   }
 
-  const onViewportChange = () => syncPortfolioAutoPreviews();
-  window.addEventListener('scroll', onViewportChange, { passive: true });
-  window.addEventListener('resize', onViewportChange);
-  syncPortfolioAutoPreviews();
+  window.addEventListener('scroll', requestPortfolioPreviewSync, { passive: true });
+  window.addEventListener('resize', requestPortfolioPreviewSync);
+  requestPortfolioPreviewSync();
 }
 
 function setActiveFilter(filter) {
@@ -382,11 +441,14 @@ function setActiveFilter(filter) {
     const shouldShow = filter === 'all' || card.dataset.category === filter;
     card.hidden = !shouldShow;
     card.classList.toggle('is-hidden', !shouldShow);
-    if (!shouldShow) clearProjectPreview(card);
+    if (!shouldShow) {
+      portfolioPreviewVisibility.set(card, 0);
+      clearProjectPreview(card);
+    }
   });
 
   requestAnimationFrame(() => {
-    syncPortfolioAutoPreviews();
+    requestPortfolioPreviewSync();
   });
 }
 
@@ -510,24 +572,27 @@ function mountPortraitPreview(card) {
   if (!previewUrl) return;
   const previewShell = document.createElement('div');
   previewShell.className = 'portrait-card-preview';
-  previewShell.append(createIframe(previewUrl, `${card.dataset.title || 'Portrait work'} preview`));
+  const iframe = createIframe('', `${card.dataset.title || 'Portrait work'} preview`);
+  previewShell.append(iframe);
   card.append(previewShell);
   card.classList.add('has-preview');
   portraitPreviewCard = card;
+  deferIframeSource(iframe, previewUrl);
 }
 
 function getPortraitMetrics(distance) {
+  const narrow = window.innerWidth <= 640;
   const compact = window.innerWidth <= 920;
-  const xStep = compact ? 18 : 32;
-  const yStep = compact ? 14 : 18;
-  const rotateStep = compact ? 1.4 : 1.8;
-  const scaleStep = compact ? 0.045 : 0.05;
+  const xStep = narrow ? 12 : compact ? 18 : 32;
+  const yStep = narrow ? 10 : compact ? 14 : 18;
+  const rotateStep = narrow ? 0.8 : compact ? 1.4 : 1.8;
+  const scaleStep = narrow ? 0.03 : compact ? 0.045 : 0.05;
   return {
     x: `${distance * xStep}px`,
     y: `${distance * yStep}px`,
     rotate: `${distance * rotateStep}deg`,
-    scale: `${Math.max(0.78, 1 - distance * scaleStep)}`,
-    opacity: `${Math.max(0.26, 1 - distance * 0.08)}`
+    scale: `${Math.max(narrow ? 0.86 : 0.78, 1 - distance * scaleStep)}`,
+    opacity: `${Math.max(narrow ? 0.34 : 0.26, 1 - distance * 0.08)}`
   };
 }
 
@@ -561,7 +626,15 @@ function updatePortraitStack() {
   portraitCards.forEach((card) => {
     if (card !== activeCard) clearPortraitPreview(card);
   });
-  mountPortraitPreview(activeCard);
+
+  window.clearTimeout(portraitPreviewMountTimer);
+  if (portraitInView) {
+    portraitPreviewMountTimer = window.setTimeout(() => {
+      const latestActiveCard = portraitCards[portraitActiveIndex];
+      if (!latestActiveCard || !portraitInView) return;
+      mountPortraitPreview(latestActiveCard);
+    }, 220);
+  }
 }
 
 function setPortraitActive(index) {
@@ -635,7 +708,14 @@ function initPortraitStack() {
     observer.observe(portraitSection);
   }
 
-  window.addEventListener('resize', () => updatePortraitStack());
+  let portraitResizeFrame = 0;
+  window.addEventListener('resize', () => {
+    if (portraitResizeFrame) window.cancelAnimationFrame(portraitResizeFrame);
+    portraitResizeFrame = window.requestAnimationFrame(() => {
+      portraitResizeFrame = 0;
+      updatePortraitStack();
+    });
+  });
   updatePortraitStack();
 }
 
