@@ -55,7 +55,6 @@ let portraitInView = false;
 let portraitPreviewCard = null;
 let lastModalTrigger = null;
 let projectPreviewObserver = null;
-let activePortfolioPreviewCard = null;
 let portfolioPreviewSyncFrame = 0;
 let portraitPreviewMountTimer = 0;
 const portfolioPreviewVisibility = new Map();
@@ -305,7 +304,6 @@ function clearProjectPreview(card) {
   const preview = card.querySelector('.project-card-preview');
   if (preview) preview.remove();
   card.classList.remove('has-preview');
-  if (activePortfolioPreviewCard === card) activePortfolioPreviewCard = null;
 }
 
 function mountProjectPreview(card) {
@@ -320,6 +318,7 @@ function mountProjectPreview(card) {
   if (!media || !previewUrl) return;
   const previewShell = document.createElement('div');
   previewShell.className = 'project-card-preview';
+  previewShell.setAttribute('aria-hidden', 'true');
   const iframe = createIframe('', `${card.dataset.title || 'Project'} preview`);
   previewShell.append(iframe);
   media.append(previewShell);
@@ -327,55 +326,31 @@ function mountProjectPreview(card) {
   deferIframeSource(iframe, previewUrl);
 }
 
-function setActivePortfolioPreview(card) {
-  if (activePortfolioPreviewCard === card) {
-    if (card) mountProjectPreview(card);
-    return;
-  }
-
-  portfolioCards.forEach((item) => {
-    if (item !== card) clearProjectPreview(item);
-  });
-
-  activePortfolioPreviewCard = card || null;
-  if (card) mountProjectPreview(card);
-}
-
-function getBestVisiblePortfolioCard() {
-  let bestCard = null;
-  let bestRatio = 0;
-
+function syncPortfolioAutoPreviews() {
   portfolioCards.forEach((card) => {
-    if (card.hidden || card.classList.contains('is-hidden')) return;
-    const ratio = Number(portfolioPreviewVisibility.get(card) || 0);
-    if (ratio > bestRatio) {
-      bestRatio = ratio;
-      bestCard = card;
+    if (card.hidden || card.classList.contains('is-hidden')) {
+      clearProjectPreview(card);
+      return;
     }
-  });
 
-  if (bestCard && bestRatio >= 0.24) return bestCard;
+    const ratio = Number(portfolioPreviewVisibility.get(card) || 0);
+    if (ratio >= 0.18) {
+      mountProjectPreview(card);
+      return;
+    }
 
-  let bestViewportCard = null;
-  let bestViewportScore = 0;
-  portfolioCards.forEach((card) => {
-    if (card.hidden || card.classList.contains('is-hidden')) return;
     const rect = card.getBoundingClientRect();
     const visibleHeight = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
     const visibleWidth = Math.max(0, Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0));
     const area = rect.width * rect.height || 1;
     const score = (visibleHeight * visibleWidth) / area;
-    if (score > bestViewportScore) {
-      bestViewportScore = score;
-      bestViewportCard = card;
+
+    if (score >= 0.18) {
+      mountProjectPreview(card);
+    } else {
+      clearProjectPreview(card);
     }
   });
-
-  return bestViewportScore >= 0.24 ? bestViewportCard : null;
-}
-
-function syncPortfolioAutoPreviews() {
-  setActivePortfolioPreview(getBestVisiblePortfolioCard());
 }
 
 function requestPortfolioPreviewSync() {
@@ -415,7 +390,7 @@ function initPortfolioAutoPreviews() {
     window.addEventListener('resize', requestPortfolioPreviewSync);
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
-        setActivePortfolioPreview(null);
+        portfolioCards.forEach((card) => clearProjectPreview(card));
         return;
       }
       requestPortfolioPreviewSync();
