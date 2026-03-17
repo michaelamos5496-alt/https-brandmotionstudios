@@ -798,13 +798,22 @@ function initBtsTracks() {
   btsTracks.forEach((track) => {
     if (track.dataset.duplicated === 'true') return;
     const items = Array.from(track.children);
-    items.forEach((item) => {
+    items.forEach((item, index) => {
+      item.dataset.btsClone = 'false';
+      item.querySelectorAll('img').forEach((img) => {
+        img.loading = 'eager';
+        img.decoding = 'async';
+        if (index < 2) img.fetchPriority = 'high';
+      });
+
       const clone = item.cloneNode(true);
+      clone.dataset.btsClone = 'true';
       clone.setAttribute('aria-hidden', 'true');
       clone.querySelectorAll('img').forEach((img) => {
         img.alt = '';
         img.loading = 'lazy';
         img.decoding = 'async';
+        img.fetchPriority = 'low';
       });
       track.append(clone);
     });
@@ -1179,9 +1188,9 @@ function initSectionReveals() {
       );
     });
 
-    const btsFrames = document.querySelectorAll('.bts-frame');
+    const btsFrames = document.querySelectorAll('#bts .bts-frame[data-bts-clone="false"]');
     if (btsFrames.length && hasScrollTrigger) {
-      gsap.from('.bts-frame', {
+      gsap.from(btsFrames, {
         y: 18,
         autoAlpha: 0,
         duration: 0.65,
