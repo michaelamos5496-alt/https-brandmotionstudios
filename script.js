@@ -414,12 +414,12 @@ function initPortfolioCards() {
 
   portfolioCards.forEach((card) => {
     card.setAttribute('role', 'button');
-    card.setAttribute('aria-label', `${card.dataset.title || 'Project'}. Open case study.`);
-    card.addEventListener('click', () => openCaseStudy(card.dataset.projectId, card));
+    card.setAttribute('aria-label', `${card.dataset.title || 'Project'}. Play project.`);
+    card.addEventListener('click', () => openPlayer(card.dataset.playUrl || ''));
     card.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
-        openCaseStudy(card.dataset.projectId, card);
+        openPlayer(card.dataset.playUrl || '');
       }
     });
   });
@@ -434,26 +434,6 @@ function initPortfolioCards() {
       setActiveFilter(targetFilter);
       document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-  });
-
-  caseStudyButtons.forEach((button) => {
-    button.addEventListener('click', (event) => {
-      event.preventDefault();
-      const projectId = button.dataset.openCaseStudy;
-      if (!projectId) return;
-      openCaseStudy(projectId, button);
-    });
-  });
-
-  if (caseStudyPlayBtn) {
-    caseStudyPlayBtn.addEventListener('click', () => {
-      if (!activeCaseStudyCard?.dataset.playUrl) return;
-      openPlayer(activeCaseStudyCard.dataset.playUrl);
-    });
-  }
-
-  document.querySelectorAll('[data-close-case-study]').forEach((button) => {
-    button.addEventListener('click', () => closeCaseStudy());
   });
 
   setActiveFilter('all');
