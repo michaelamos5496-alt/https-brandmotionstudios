@@ -836,8 +836,6 @@ function initHeroMotion() {
   if (!heroSection || !heroImage || !heroScrim) return;
 
   heroSection.classList.add('visible');
-  heroCopy?.classList.add('visible');
-  heroScroll?.classList.add('visible');
 
   const heroWords = hasGsap ? window.gsap.utils.toArray('.hero-word') : [];
   const heroSecondary = [
@@ -848,6 +846,8 @@ function initHeroMotion() {
   ].filter(Boolean);
 
   if (!hasGsap || prefersReducedMotion.matches) {
+    heroCopy?.classList.add('visible');
+    heroScroll?.classList.add('visible');
     heroImage.style.setProperty('--hero-scale', '1');
     heroImage.style.setProperty('--hero-y-offset', '0px');
     heroImage.style.setProperty('--hero-blur', '0px');
@@ -868,7 +868,7 @@ function initHeroMotion() {
   if (hasScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
 
   gsap.set([heroCopy, heroScroll].filter(Boolean), {
-    autoAlpha: 1,
+    autoAlpha: 0,
     y: 0
   });
   if (heroWords.length) {
@@ -885,6 +885,7 @@ function initHeroMotion() {
   }
 
   gsap.set(heroImage, {
+    autoAlpha: 0,
     '--hero-scale': 1.08,
     '--hero-y-offset': '0px',
     '--hero-blur': '7px',
@@ -892,44 +893,76 @@ function initHeroMotion() {
   });
   gsap.set(heroScrim, { '--hero-scrim-opacity': 0.82 });
 
-  const loadTimeline = gsap.timeline({
-    defaults: { ease: 'power3.out' }
-  });
+  let heroSceneStarted = false;
+  const startHeroScene = () => {
+    if (heroSceneStarted) return;
+    heroSceneStarted = true;
+    heroCopy?.classList.add('visible');
+    heroScroll?.classList.add('visible');
 
-  loadTimeline.to(heroImage, {
-    '--hero-scale': 1,
-    '--hero-blur': '0px',
-    '--hero-brightness': 1,
-    duration: 1.8
-  }, 0);
+    const loadTimeline = gsap.timeline({
+      defaults: { ease: 'power3.out' }
+    });
 
-  loadTimeline.to(heroScrim, {
-    '--hero-scrim-opacity': 1,
-    duration: 1.45,
-    ease: 'power2.out'
-  }, 0.08);
-
-  if (heroWords.length) {
-    loadTimeline.to(heroWords, {
-      yPercent: 0,
+    loadTimeline.to(heroImage, {
       autoAlpha: 1,
-      duration: 1.02,
-      stagger: 0.05,
-      ease: 'power4.out',
-      clearProps: 'opacity,transform'
-    }, 0.24);
-  }
+      '--hero-scale': 1,
+      '--hero-blur': '0px',
+      '--hero-brightness': 1,
+      duration: 1.8
+    }, 0);
 
-  if (heroSecondary.length) {
-    loadTimeline.to(heroSecondary, {
-      y: 0,
-      autoAlpha: 1,
-      duration: 0.82,
-      stagger: 0.08,
-      ease: 'power3.out',
-      clearProps: 'opacity,transform'
-    }, 0.66);
-  }
+    loadTimeline.to(heroScrim, {
+      '--hero-scrim-opacity': 1,
+      duration: 1.45,
+      ease: 'power2.out'
+    }, 0.08);
+
+    if (heroWords.length) {
+      loadTimeline.to(heroWords, {
+        yPercent: 0,
+        autoAlpha: 1,
+        duration: 1.02,
+        stagger: 0.05,
+        ease: 'power4.out',
+        clearProps: 'opacity,transform'
+      }, 0.18);
+    }
+
+    if (heroSecondary.length) {
+      loadTimeline.to(heroSecondary, {
+        y: 0,
+        autoAlpha: 1,
+        duration: 0.82,
+        stagger: 0.08,
+        ease: 'power3.out',
+        clearProps: 'opacity,transform'
+      }, 0.58);
+    }
+  };
+
+  const queueHeroScene = () => {
+    if (heroImage.complete && heroImage.naturalWidth > 0) {
+      if (typeof heroImage.decode === 'function') {
+        heroImage.decode().catch(() => {}).finally(startHeroScene);
+        return;
+      }
+      startHeroScene();
+      return;
+    }
+
+    const onReady = () => {
+      heroImage.removeEventListener('load', onReady);
+      heroImage.removeEventListener('error', onReady);
+      startHeroScene();
+    };
+
+    heroImage.addEventListener('load', onReady, { once: true });
+    heroImage.addEventListener('error', onReady, { once: true });
+    window.setTimeout(startHeroScene, 1600);
+  };
+
+  queueHeroScene();
 
   if (!hasScrollTrigger) return;
 
@@ -1112,8 +1145,6 @@ function initPortfolioGalleryMotion() {
 
 function initSectionReveals() {
   if (!sectionReveals.length) return;
-
-  document.querySelectorAll('.hero .section-reveal').forEach((section) => section.classList.add('visible'));
 
   if (hasGsap && !prefersReducedMotion.matches) {
     const gsap = window.gsap;
