@@ -1001,9 +1001,42 @@ if ('scrollRestoration' in history) {
   history.scrollRestoration = 'manual';
 }
 
-window.addEventListener('pageshow', () => {
+function isReloadNavigation() {
+  const navigationEntry = performance.getEntriesByType?.('navigation')?.[0];
+  if (navigationEntry && navigationEntry.type === 'reload') return true;
+  return typeof performance.navigation !== 'undefined' && performance.navigation.type === 1;
+}
+
+function forceHomeOnRefresh() {
+  if (!document.getElementById('home')) return;
+
+  if (location.hash) {
+    history.replaceState(null, '', `${location.pathname}${location.search}`);
+  }
+
+  window.scrollTo(0, 0);
+  requestAnimationFrame(() => {
+    window.scrollTo(0, 0);
+  });
+  window.setTimeout(() => {
+    window.scrollTo(0, 0);
+  }, 80);
+}
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted || isReloadNavigation()) {
+    forceHomeOnRefresh();
+    return;
+  }
+
   if (!location.hash && document.getElementById('home')) {
     window.scrollTo(0, 0);
+  }
+});
+
+window.addEventListener('load', () => {
+  if (isReloadNavigation()) {
+    forceHomeOnRefresh();
   }
 });
 
