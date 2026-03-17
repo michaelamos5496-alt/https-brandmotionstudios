@@ -1072,7 +1072,7 @@ function initPortfolioGalleryMotion() {
         start: 'top top+=92',
         end: () => `+=${Math.min(170, Math.max(120, (portfolioGrid?.offsetHeight || 0) * 0.18))}`,
         pin: portfolioIntro,
-        pinSpacing: false,
+        pinSpacing: true,
         scrub: false,
         anticipatePin: 1
       });

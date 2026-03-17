@@ -894,8 +894,8 @@ html[data-theme="light"] .theme-icon-moon {
   z-index: 5;
   display: grid;
   gap: 1.15rem;
-  margin-bottom: 1.6rem;
-  padding-bottom: 0.4rem;
+  margin-bottom: clamp(1.9rem, 3vw, 2.8rem);
+  padding-bottom: 0.8rem;
   background: linear-gradient(180deg, var(--bg) 72%, rgba(0, 0, 0, 0));
 }
 
